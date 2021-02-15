@@ -1,0 +1,1 @@
+# ionic-native-face-api
