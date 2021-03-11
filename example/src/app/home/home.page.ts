@@ -3,7 +3,7 @@ import { File } from '@ionic-native/file'
 import { ImagePicker } from '@ionic-native/image-picker/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, Face } from '@regulaforensics/ionic-native-face-api-beta/ngx';
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceApi } from '@regulaforensics/ionic-native-face-api-beta/ngx';
 
 var image1 = new Image()
 var image2 = new Image()
@@ -22,59 +22,41 @@ export class HomePage {
   @ViewChild('similarityResult', { static: true }) similarityResult: ElementRef
   @ViewChild('livenessResult', { static: true }) livenessResult: ElementRef
 
-  constructor(public Face: Face, public platform: Platform, private imagePicker: ImagePicker, private androidPermissions: AndroidPermissions) {
+  constructor(public Face: FaceApi, public platform: Platform, private imagePicker: ImagePicker, private androidPermissions: AndroidPermissions) {
   }
 
   ionViewDidEnter() {
     var app = this
     var Face = this.Face
-    var error1 = e => console.log(e)
-    var error2 = e => {
-      e = JSON.stringify(e, undefined, 2)
-      console.log(e)
-      alert(e)
-    }
 
     app.img1.nativeElement.onclick = function () { pickImage(true) }
     app.img2.nativeElement.onclick = function () { pickImage(false) }
     app.matchFacesButton.nativeElement.addEventListener("click", matchFaces)
     app.livenessButton.nativeElement.addEventListener("click", liveness)
     app.clearResultsButton.nativeElement.addEventListener("click", clearResults)
-
     app.platform.ready()
 
-    function readFile(dirPath: string, fileName: string, callback, ...items) {
-      File.resolveDirectoryUrl(File.applicationDirectory + dirPath).then(dir => File.getFile(dir, fileName, null).then(fileEntry => fileEntry.file(file => {
-        var reader = new FileReader()
-        reader.onloadend = (evt) => {
-          var data = reader.result as String
-          data = data.substring(data.indexOf(',') + 1)
-          callback(data, items)
-        }
-        reader.readAsDataURL(file)
-      })))
-    }
-
     function liveness() {
-      Face.startLivenessMatching(result => {
+      Face.startLivenessMatching().then(result => {
         result = LivenessResponse.fromJson(JSON.parse(result))
         image1.bitmap = result.bitmap
         image1.imageType = Enum.eInputFaceType.ift_Live
         app.img1.nativeElement.src = "data:image/png;base64," + result.bitmap
-        app.livenessButton.nativeElement.innerHTML = result["liveness"] == 0 ? "passed" : "not passed"
-      }, e => { })
+        app.livenessResult.nativeElement.innerHTML = result["liveness"] == 0 ? "passed" : "not passed"
+      })
     }
 
     function matchFaces() {
       if (image1 == null || image1.bitmap == null || image1.bitmap == "" || image2 == null || image2.bitmap == null || image2.bitmap == "")
         return
+      app.similarityResult.nativeElement.innerHTML = "Processing..."
       var request = new MatchFacesRequest()
       request.images = [image1, image2]
-      Face.matchFaces(JSON.stringify(request), response => {
+      Face.matchFaces(JSON.stringify(request)).then(response => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
         var matchedFaces = response.matchedFaces
         app.similarityResult.nativeElement.innerHTML = matchedFaces.length > 0 ? ((matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
-      }, e => { app.similarityResult.nativeElement.innerHTML = e })
+      })
     }
 
     function clearResults() {
@@ -88,7 +70,7 @@ export class HomePage {
 
     function pickImage(first: boolean) {
       if (confirm("Use camera?"))
-        Face.presentFaceCaptureActivity(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.eInputFaceType.ift_Live), e => { })
+        Face.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.eInputFaceType.ift_Live))
       else if (app.platform.is("android"))
         useGalleryAndroid(first)
       else if (app.platform.is("ios"))
@@ -119,8 +101,8 @@ export class HomePage {
           (app.platform.is("ios") ? "file://" : "") + results[0].substring(0, (results[0] as string).lastIndexOf("/")),
           results[0].substring((results[0] as string).lastIndexOf("/") + 1)).then(
             (file => setImage(first, (file as string).substring(23), Enum.eInputFaceType.ift_DocumentPrinted))
-          ).catch(error2)
-      }, error2)
+          )
+      })
     }
 
     function useGalleryAndroid(first: boolean) {

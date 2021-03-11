@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ImagePicker } from "@ionic-native/image-picker/ngx";
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-import { Face } from '@regulaforensics/ionic-native-face-api-beta/ngx';
+import { FaceApi } from '@regulaforensics/ionic-native-face-api-beta/ngx';
 
 import { HomePage } from './home.page';
 
@@ -24,7 +24,7 @@ import { HomePage } from './home.page';
   providers:[
     ImagePicker,
     AndroidPermissions,
-    Face
+    FaceApi
   ],
   declarations: [HomePage]
 })
