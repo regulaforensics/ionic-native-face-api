@@ -1,0 +1,7 @@
+{
+  "name": "FaceApi",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

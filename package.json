@@ -1,0 +1,19 @@
+{
+  "name": "@regulaforensics/ionic-native-face-api-beta",
+  "version": "0.0.1",
+  "description": "Ionic Native wrapper for cordova face api",
+  "main": "index.js",
+  "keywords": [
+    "ionic-native", "faceapi", "face", "regula"
+  ],
+  "author": "Regulaforensics",
+  "license": "commercial",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/regulaforensics/ionic-native-face-api"
+  },
+  "homepage": "https://mobile.regulaforensics.com",
+  "publishConfig": {
+    "access": "public"
+  }
+}
