@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core'
 import { File } from '@ionic-native/file'
 import { ImagePicker } from '@ionic-native/image-picker/ngx'
-import { Dialogs } from '@ionic-native/dialogs'
+import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Platform } from '@ionic/angular'
 import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceApi } from '@regulaforensics/ionic-native-face-api-beta/ngx'
@@ -70,15 +70,15 @@ export class HomePage {
     }
 
     function pickImage(first: boolean) {
-      app.dialogs.alert('Hello world')
-  .then(() => console.log('Dialog dismissed'))
-  .catch(e => console.log('Error displaying dialog', e));
-      if (confirm("Use camera?"))
-        Face.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.eInputFaceType.ift_Live))
-      else if (app.platform.is("android"))
-        useGalleryAndroid(first)
-      else if (app.platform.is("ios"))
-        useGallery(first)
+      app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button) => {
+        if (button == 1)
+          Face.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.eInputFaceType.ift_Live))
+        else if (button == 2)
+          if (app.platform.is("android"))
+            useGalleryAndroid(first)
+          else if (app.platform.is("ios"))
+            useGallery(first)
+      })
     }
 
     function setImage(first: boolean, base64: string, type: number) {
