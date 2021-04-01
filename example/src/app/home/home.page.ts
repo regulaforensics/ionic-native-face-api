@@ -1,9 +1,10 @@
 import { Component, ViewChild, ElementRef } from '@angular/core'
 import { File } from '@ionic-native/file'
 import { ImagePicker } from '@ionic-native/image-picker/ngx'
+import { Dialogs } from '@ionic-native/dialogs'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceApi } from '@regulaforensics/ionic-native-face-api-beta/ngx';
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceApi } from '@regulaforensics/ionic-native-face-api-beta/ngx'
 
 var image1 = new Image()
 var image2 = new Image()
@@ -22,7 +23,7 @@ export class HomePage {
   @ViewChild('similarityResult', { static: true }) similarityResult: ElementRef
   @ViewChild('livenessResult', { static: true }) livenessResult: ElementRef
 
-  constructor(public Face: FaceApi, public platform: Platform, private imagePicker: ImagePicker, private androidPermissions: AndroidPermissions) {
+  constructor(public Face: FaceApi, public platform: Platform, private imagePicker: ImagePicker, private dialogs: Dialogs, private androidPermissions: AndroidPermissions) {
   }
 
   ionViewDidEnter() {
@@ -69,6 +70,9 @@ export class HomePage {
     }
 
     function pickImage(first: boolean) {
+      app.dialogs.alert('Hello world')
+  .then(() => console.log('Dialog dismissed'))
+  .catch(e => console.log('Error displaying dialog', e));
       if (confirm("Use camera?"))
         Face.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.eInputFaceType.ift_Live))
       else if (app.platform.is("android"))
