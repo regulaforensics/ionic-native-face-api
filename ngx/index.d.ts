@@ -227,26 +227,26 @@ export declare class FaceApi extends IonicNativePlugin {
      * @param {number} cameraId description
      * @return {Promise<any>} Returns a promise
      */
-    presentFaceCaptureActivityByCameraId(cameraId: number): Promise<any>;
+    presentFaceCaptureActivityByCameraId(cameraId: any): Promise<any>;
     /**
      *  description
      *
      * @param {number} cameraId description
      * @return {Promise<any>} Returns a promise
      */
-    startLivenessByCameraId(cameraId: number): Promise<any>;
+    startLivenessByCameraId(cameraId: any): Promise<any>;
     /**
      *  description
      *
      * @param {string} url description
      * @return {Promise<any>} Returns a promise
      */
-    setServiceUrl(url: string): Promise<any>;
+    setServiceUrl(url: any): Promise<any>;
     /**
      *  description
      *
      * @param {MatchFacesRequest} request description
      * @return {Promise<any>} Returns a promise
      */
-    matchFaces(request: MatchFacesRequest): Promise<any>;
+    matchFaces(request: any): Promise<any>;
 }
