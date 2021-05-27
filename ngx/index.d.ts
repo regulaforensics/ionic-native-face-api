@@ -19,10 +19,6 @@ export declare class MatchFacesError {
     message?: string;
     static fromJson(jsonObject?: any): MatchFacesError;
 }
-export declare class LivenessParams {
-    attemptsCount?: number;
-    static fromJson(jsonObject?: any): LivenessParams;
-}
 export declare class AgeRange {
     high?: number;
     low?: number;
@@ -200,19 +196,13 @@ export declare class FaceApi extends IonicNativePlugin {
      *
      * @return {Promise<any>} Returns a promise
      */
-    startLivenessMatching(): Promise<any>;
+    startLiveness(): Promise<any>;
     /**
      *  description
      *
      * @return {Promise<any>} Returns a promise
      */
     getFaceSdkVersion(): Promise<any>;
-    /**
-     *  description
-     *
-     * @return {Promise<any>} Returns a promise
-     */
-    livenessParams(): Promise<any>;
     /**
      *  description
      *
@@ -244,7 +234,7 @@ export declare class FaceApi extends IonicNativePlugin {
      * @param {number} cameraId description
      * @return {Promise<any>} Returns a promise
      */
-    startLivenessMatchingByCameraId(cameraId: number): Promise<any>;
+    startLivenessByCameraId(cameraId: number): Promise<any>;
     /**
      *  description
      *

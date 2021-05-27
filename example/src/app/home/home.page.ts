@@ -38,7 +38,7 @@ export class HomePage {
     app.platform.ready()
 
     function liveness() {
-      Face.startLivenessMatching().then(result => {
+      Face.startLiveness().then(result => {
         result = LivenessResponse.fromJson(JSON.parse(result))
         image1.bitmap = result.bitmap
         image1.imageType = Enum.eInputFaceType.ift_Live
@@ -53,7 +53,7 @@ export class HomePage {
       app.similarityResult.nativeElement.innerHTML = "Processing..."
       var request = new MatchFacesRequest()
       request.images = [image1, image2]
-      Face.matchFaces(JSON.stringify(request)).then(response => {
+      Face.matchFaces(request).then(response => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
         var matchedFaces = response.matchedFaces
         app.similarityResult.nativeElement.innerHTML = matchedFaces.length > 0 ? ((matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
