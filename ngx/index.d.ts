@@ -96,10 +96,10 @@ export declare const eFaceRProcessorErrorCodes: {
     FR_FACE_ALIGHNER_FAILED: number;
     FR_DESCRIPTOR_EXTRACTOR_ERROR: number;
     SERVER_RESPONSE_IS_EMPTY: number;
-    RGLFaceProcessorResultCodeNoLicense: number;
-    RGLFaceProcessorResultCodeIsNotInitialized: number;
-    RGLFaceProcessorResultCodeCommandIsNotSupported: number;
-    RGLFaceProcessorResultCodeCommandParamsReadError: number;
+    NO_LICENSE: number;
+    NOT_INITIALIZED: number;
+    COMMAND_IS_NOT_SUPPORTED: number;
+    COMMAND_PARAMS_READ_ERROR: number;
 };
 export declare const eInputFaceType: {
     ift_DocumentPrinted: number;
@@ -117,6 +117,7 @@ export declare const LivenessErrorCode: {
     INTERNAL_ERROR: number;
     SERVER_ERROR: number;
     ZOOM_NOT_SUPPORTED: number;
+    NO_LICENSE: number;
     CANCELLED: number;
     PROCESSING_TIMEOUT: number;
     SERVER_RESPONSE_IS_EMPTY: number;
@@ -135,10 +136,10 @@ export declare const Enum: {
         FR_FACE_ALIGHNER_FAILED: number;
         FR_DESCRIPTOR_EXTRACTOR_ERROR: number;
         SERVER_RESPONSE_IS_EMPTY: number;
-        RGLFaceProcessorResultCodeNoLicense: number;
-        RGLFaceProcessorResultCodeIsNotInitialized: number;
-        RGLFaceProcessorResultCodeCommandIsNotSupported: number;
-        RGLFaceProcessorResultCodeCommandParamsReadError: number;
+        NO_LICENSE: number;
+        NOT_INITIALIZED: number;
+        COMMAND_IS_NOT_SUPPORTED: number;
+        COMMAND_PARAMS_READ_ERROR: number;
     };
     eInputFaceType: {
         ift_DocumentPrinted: number;
@@ -156,6 +157,7 @@ export declare const Enum: {
         INTERNAL_ERROR: number;
         SERVER_ERROR: number;
         ZOOM_NOT_SUPPORTED: number;
+        NO_LICENSE: number;
         CANCELLED: number;
         PROCESSING_TIMEOUT: number;
         SERVER_RESPONSE_IS_EMPTY: number;
