@@ -4,7 +4,7 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceApi } from '@regulaforensics/ionic-native-face-api-beta/ngx'
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceSDK } from '@regulaforensics/ionic-native-face-api-beta/ngx'
 
 var image1 = new Image()
 var image2 = new Image()
@@ -23,12 +23,12 @@ export class HomePage {
   @ViewChild('similarityResult', { static: true }) similarityResult: ElementRef
   @ViewChild('livenessResult', { static: true }) livenessResult: ElementRef
 
-  constructor(public Face: FaceApi, public platform: Platform, private imagePicker: ImagePicker, private dialogs: Dialogs, private androidPermissions: AndroidPermissions) {
+  constructor(public FaceSDK: FaceSDK, public platform: Platform, private imagePicker: ImagePicker, private dialogs: Dialogs, private androidPermissions: AndroidPermissions) {
   }
 
   ionViewDidEnter() {
     var app = this
-    var Face = this.Face
+    var FaceSDK = this.FaceSDK
 
     app.img1.nativeElement.onclick = function () { pickImage(true) }
     app.img2.nativeElement.onclick = function () { pickImage(false) }
@@ -38,7 +38,7 @@ export class HomePage {
     app.platform.ready()
 
     function liveness() {
-      Face.startLiveness().then(result => {
+      FaceSDK.startLiveness().then(result => {
         result = LivenessResponse.fromJson(JSON.parse(result))
         image1.bitmap = result.bitmap
         image1.imageType = Enum.eInputFaceType.ift_Live
@@ -53,7 +53,7 @@ export class HomePage {
       app.similarityResult.nativeElement.innerHTML = "Processing..."
       var request = new MatchFacesRequest()
       request.images = [image1, image2]
-      Face.matchFaces(JSON.stringify(request)).then(response => {
+      FaceSDK.matchFaces(JSON.stringify(request)).then(response => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
         var matchedFaces = response.matchedFaces
         app.similarityResult.nativeElement.innerHTML = matchedFaces.length > 0 ? ((matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
@@ -72,7 +72,7 @@ export class HomePage {
     function pickImage(first: boolean) {
       app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button) => {
         if (button == 1)
-          Face.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.eInputFaceType.ift_Live))
+        FaceSDK.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.eInputFaceType.ift_Live))
         else if (button == 2)
           if (app.platform.is("android"))
             useGalleryAndroid(first)
