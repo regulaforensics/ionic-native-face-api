@@ -19,11 +19,6 @@ export declare class MatchFacesError {
     message?: string;
     static fromJson(jsonObject?: any): MatchFacesError;
 }
-export declare class AgeRange {
-    high?: number;
-    low?: number;
-    static fromJson(jsonObject?: any): AgeRange;
-}
 export declare class ComparedFace {
     tag?: string;
     imageType?: number;
@@ -37,26 +32,10 @@ export declare class ComparedFacesPair {
     error?: MatchFacesError;
     static fromJson(jsonObject?: any): ComparedFacesPair;
 }
-export declare class Ethnicity {
-    confidence?: number;
-    value?: number;
-    static fromJson(jsonObject?: any): Ethnicity;
-}
 export declare class FaceCaptureResponse {
     error?: FaceCaptureError;
     image?: Image;
     static fromJson(jsonObject?: any): FaceCaptureResponse;
-}
-export declare class Gender {
-    confidence?: number;
-    value?: number;
-    static fromJson(jsonObject?: any): Gender;
-}
-export declare class Landmark {
-    type?: number;
-    x?: number;
-    y?: number;
-    static fromJson(jsonObject?: any): Landmark;
 }
 export declare class LivenessResponse {
     bitmap?: string;
