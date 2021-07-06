@@ -170,23 +170,23 @@ export declare const Enum: {
     };
 };
 /**
- * @name Face
+ * @name FaceSDK
  * @description
- * This is a wrapper cordova plugin for Regula`s Face Api.
+ * This is a wrapper cordova plugin for Regula`s Face SDK.
  *
  * @usage
  * ```typescript
- * import { Face } from '@ionic-native/face-api/ngx';
+ * import { FaceSDK } from '@ionic-native/face-api/ngx';
  *
  *
- * constructor(public Face: Face) { }
+ * constructor(public FaceSDK: FaceSDK) { }
  *
  * ...
  *
  *
  * ```
  */
-export declare class FaceApiOriginal extends IonicNativePlugin {
+export declare class FaceSDKOriginal extends IonicNativePlugin {
     /**
      *  description
      *
@@ -253,4 +253,4 @@ export declare class FaceApiOriginal extends IonicNativePlugin {
     matchFaces(request: any): Promise<any>;
 }
 
-export declare const FaceApi: FaceApiOriginal;
+export declare const FaceSDK: FaceSDKOriginal;
