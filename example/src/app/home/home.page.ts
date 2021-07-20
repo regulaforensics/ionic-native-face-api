@@ -41,7 +41,7 @@ export class HomePage {
       FaceSDK.startLiveness().then(result => {
         result = LivenessResponse.fromJson(JSON.parse(result))
         image1.bitmap = result.bitmap
-        image1.imageType = Enum.eInputFaceType.ift_Live
+        image1.imageType = Enum.ImageType.IMAGE_TYPE_LIVE
         app.img1.nativeElement.src = "data:image/png;base64," + result.bitmap
         app.livenessResult.nativeElement.innerHTML = result["liveness"] == 0 ? "passed" : "not passed"
       })
@@ -72,7 +72,7 @@ export class HomePage {
     function pickImage(first: boolean) {
       app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button) => {
         if (button == 1)
-        FaceSDK.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.eInputFaceType.ift_Live))
+        FaceSDK.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.ImageType.IMAGE_TYPE_LIVE))
         else if (button == 2)
           if (app.platform.is("android"))
             useGalleryAndroid(first)
@@ -104,7 +104,7 @@ export class HomePage {
         File.readAsDataURL(
           (app.platform.is("ios") ? "file://" : "") + results[0].substring(0, (results[0] as string).lastIndexOf("/")),
           results[0].substring((results[0] as string).lastIndexOf("/") + 1)).then(
-            (file => setImage(first, (file as string).substring(23), Enum.eInputFaceType.ift_DocumentPrinted))
+            (file => setImage(first, (file as string).substring(23), Enum.ImageType.IMAGE_TYPE_PRINTED))
           )
       })
     }
