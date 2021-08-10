@@ -216,7 +216,6 @@ export declare class FaceSDK extends IonicNativePlugin {
      */
     stopLivenessProcessing(): Promise<any>;
     /**
-     *        // add configuration
      *  description
      *
      * @param {number} cameraId description
@@ -224,7 +223,6 @@ export declare class FaceSDK extends IonicNativePlugin {
      */
     presentFaceCaptureActivityByCameraId(cameraId: any): Promise<any>;
     /**
-     *             // add configuration
      *  description
      *
      * @param {number} cameraId description
@@ -245,4 +243,11 @@ export declare class FaceSDK extends IonicNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     matchFaces(request: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} language description
+     * @return {Promise<any>} Returns a promise
+     */
+    setLanguage(language: any): Promise<any>;
 }
