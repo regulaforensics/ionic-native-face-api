@@ -110,6 +110,10 @@ export declare const MatchFacesErrorCodes: {
     API_CALL_FAILED: number;
     PROCESSING_FAILED: number;
 };
+export declare const RFSCameraPosition: {
+    RFSCameraPositionBack: number;
+    RFSCameraPositionFront: number;
+};
 export declare const Enum: {
     ComparedFacesPairErrorCodes: {
         IMAGE_EMPTY: number;
@@ -159,6 +163,10 @@ export declare const Enum: {
         COMMAND_PARAMS_READ_ERROR: number;
         API_CALL_FAILED: number;
         PROCESSING_FAILED: number;
+    };
+    RFSCameraPosition: {
+        RFSCameraPositionBack: number;
+        RFSCameraPositionFront: number;
     };
 };
 /**
@@ -218,17 +226,19 @@ export declare class FaceSDK extends IonicNativePlugin {
     /**
      *  description
      *
-     * @param {number} cameraId description
+     * @param {object} config int cameraId - set camera on Android
+     *  RFSCameraPosition cameraPositionIOS - set camera on iOS
      * @return {Promise<any>} Returns a promise
      */
-    presentFaceCaptureActivityByCameraId(cameraId: any): Promise<any>;
+    presentFaceCaptureActivityWithConfig(config: any): Promise<any>;
     /**
      *  description
      *
-     * @param {number} cameraId description
+     * @param {object} config int cameraId - set camera on Android
+     *  RFSCameraPosition cameraPositionIOS - set camera on iOS
      * @return {Promise<any>} Returns a promise
      */
-    startLivenessByCameraId(cameraId: any): Promise<any>;
+    startLivenessWithConfig(config: any): Promise<any>;
     /**
      *  description
      *
@@ -250,4 +260,12 @@ export declare class FaceSDK extends IonicNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     setLanguage(language: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {MatchFacesRequest} request description
+     * @param {object} config description
+     * @return {Promise<any>} Returns a promise
+     */
+    matchFacesWithConfig(request: any, config: any): Promise<any>;
 }
