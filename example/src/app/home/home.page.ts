@@ -4,7 +4,7 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceSDK } from '@regulaforensics/ionic-native-face-api-beta/ngx'
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceSDK } from '@regulaforensics/ionic-native-face-api/ngx'
 
 var image1 = new Image()
 var image2 = new Image()
