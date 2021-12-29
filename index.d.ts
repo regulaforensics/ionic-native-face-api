@@ -261,6 +261,13 @@ export declare class FaceSDKOriginal extends IonicNativePlugin {
      */
     setLanguage(language: any): Promise<any>;
     /**
+     *  change appearance
+     *
+     * @param {object} config description
+     * @return {Promise<any>} Returns a promise
+     */
+    setConfig(config: any): Promise<any>;
+    /**
      *  description
      *
      * @param {MatchFacesRequest} request description
