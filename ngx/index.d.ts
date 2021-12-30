@@ -14,24 +14,6 @@ export declare class MatchFacesException {
     message?: string;
     static fromJson(jsonObject?: any): MatchFacesException;
 }
-export declare class ComparedFacesPairException {
-    errorCode?: number;
-    message?: string;
-    static fromJson(jsonObject?: any): ComparedFacesPairException;
-}
-export declare class ComparedFace {
-    tag?: string;
-    imageType?: number;
-    position?: number;
-    static fromJson(jsonObject?: any): ComparedFace;
-}
-export declare class ComparedFacesPair {
-    first?: ComparedFace;
-    second?: ComparedFace;
-    similarity?: number;
-    exception?: ComparedFacesPairException;
-    static fromJson(jsonObject?: any): ComparedFacesPair;
-}
 export declare class FaceCaptureResponse {
     exception?: FaceCaptureException;
     image?: Image;
@@ -40,13 +22,16 @@ export declare class FaceCaptureResponse {
 export declare class LivenessResponse {
     bitmap?: string;
     liveness?: number;
+    guid?: string;
     exception?: LivenessErrorException;
     static fromJson(jsonObject?: any): LivenessResponse;
 }
 export declare class MatchFacesResponse {
     exception?: MatchFacesException;
-    matchedFaces?: ComparedFacesPair[];
-    unmatchedFaces?: ComparedFacesPair[];
+    matchedFaces?: MatchFacesComparedFacesPair[];
+    unmatchedFaces?: MatchFacesComparedFacesPair[];
+    facesResponse?: MatchFacesDetection[];
+    results?: MatchFacesComparedFacesPair[];
     static fromJson(jsonObject?: any): MatchFacesResponse;
 }
 export declare class Image {
@@ -56,10 +41,58 @@ export declare class Image {
     static fromJson(jsonObject?: any): Image;
 }
 export declare class MatchFacesRequest {
-    similarityThreshold?: number;
-    images?: Image[];
+    matchFacesImages?: MatchFacesImage[];
     customMetadata?: any;
+    thumbnails?: boolean;
     static fromJson(jsonObject?: any): MatchFacesRequest;
+}
+export declare class MatchFacesImage {
+    imageType?: number;
+    detectAll?: boolean;
+    bitmap?: string;
+    static fromJson(jsonObject?: any): MatchFacesImage;
+}
+export declare class MatchFacesComparedFacesPair {
+    first?: MatchFacesComparedFace;
+    second?: MatchFacesComparedFace;
+    similarity?: number;
+    score?: number;
+    exception?: MatchFacesException;
+    static fromJson(jsonObject?: any): MatchFacesComparedFacesPair;
+}
+export declare class MatchFacesComparedFace {
+    detectionFace?: MatchFacesDetectionFace;
+    matchesFaceImage?: MatchFacesImage;
+    faceIndex?: number;
+    imageIndex?: number;
+    static fromJson(jsonObject?: any): MatchFacesComparedFace;
+}
+export declare class MatchFacesDetectionFace {
+    faceIndex?: number;
+    landmarks?: Point[];
+    faceRect?: Rect;
+    rotationAngle?: number;
+    thumbnail?: string;
+    static fromJson(jsonObject?: any): MatchFacesDetectionFace;
+}
+export declare class MatchFacesDetection {
+    image?: MatchFacesImage;
+    imageIndex?: number;
+    faces?: MatchFacesDetectionFace[];
+    exception?: MatchFacesException;
+    static fromJson(jsonObject?: any): MatchFacesDetection;
+}
+export declare class Point {
+    x?: number;
+    y?: number;
+    static fromJson(jsonObject?: any): Point;
+}
+export declare class Rect {
+    bottom?: number;
+    top?: number;
+    left?: number;
+    right?: number;
+    static fromJson(jsonObject?: any): Rect;
 }
 export declare const ComparedFacesPairErrorCodes: {
     IMAGE_EMPTY: number;

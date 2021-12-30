@@ -4,10 +4,10 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, Image, FaceSDK } from '@regulaforensics/ionic-native-face-api-beta/ngx'
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK } from '@regulaforensics/ionic-native-face-api-beta/ngx'
 
-var image1 = new Image()
-var image2 = new Image()
+var image1 = new MatchFacesImage()
+var image2 = new MatchFacesImage()
 
 @Component({
   selector: 'app-home',
@@ -52,7 +52,7 @@ export class HomePage {
         return
       app.similarityResult.nativeElement.innerHTML = "Processing..."
       var request = new MatchFacesRequest()
-      request.images = [image1, image2]
+      request.matchFacesImages = [image1, image2]
       FaceSDK.matchFaces(JSON.stringify(request)).then(response => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
         var matchedFaces = response.matchedFaces
@@ -63,8 +63,8 @@ export class HomePage {
     function clearResults() {
       app.img1.nativeElement.src = "assets/img/portrait.png"
       app.img2.nativeElement.src = "assets/img/portrait.png"
-      image1 = new Image()
-      image2 = new Image()
+      image1 = new MatchFacesImage()
+      image2 = new MatchFacesImage()
       app.similarityResult.nativeElement.innerHTML = "nil"
       app.livenessResult.nativeElement.innerHTML = "nil"
     }
