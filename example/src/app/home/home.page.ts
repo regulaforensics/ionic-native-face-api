@@ -55,8 +55,8 @@ export class HomePage {
       request.matchFacesImages = [image1, image2]
       FaceSDK.matchFaces(JSON.stringify(request)).then(response => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
-        var matchedFaces = response.matchedFaces
-        app.similarityResult.nativeElement.innerHTML = matchedFaces.length > 0 ? ((matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
+        var results = response.results
+        app.similarityResult.nativeElement.innerHTML = results.length > 0 ? ((results[0].similarity * 100).toFixed(2) + "%") : "error"
       })
     }
 

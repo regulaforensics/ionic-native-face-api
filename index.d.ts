@@ -28,15 +28,12 @@ export declare class LivenessResponse {
 }
 export declare class MatchFacesResponse {
     exception?: MatchFacesException;
-    matchedFaces?: MatchFacesComparedFacesPair[];
-    unmatchedFaces?: MatchFacesComparedFacesPair[];
     facesResponse?: MatchFacesDetection[];
     results?: MatchFacesComparedFacesPair[];
     static fromJson(jsonObject?: any): MatchFacesResponse;
 }
 export declare class Image {
     imageType?: number;
-    tag?: string;
     bitmap?: string;
     static fromJson(jsonObject?: any): Image;
 }
@@ -61,8 +58,8 @@ export declare class MatchFacesComparedFacesPair {
     static fromJson(jsonObject?: any): MatchFacesComparedFacesPair;
 }
 export declare class MatchFacesComparedFace {
-    detectionFace?: MatchFacesDetectionFace;
-    matchesFaceImage?: MatchFacesImage;
+    face?: MatchFacesDetectionFace;
+    image?: MatchFacesImage;
     faceIndex?: number;
     imageIndex?: number;
     static fromJson(jsonObject?: any): MatchFacesComparedFace;
