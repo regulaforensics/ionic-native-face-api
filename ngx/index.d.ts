@@ -28,7 +28,7 @@ export declare class LivenessResponse {
 }
 export declare class MatchFacesResponse {
     exception?: MatchFacesException;
-    facesResponse?: MatchFacesDetection[];
+    detections?: MatchFacesDetection[];
     results?: MatchFacesComparedFacesPair[];
     static fromJson(jsonObject?: any): MatchFacesResponse;
 }
@@ -38,7 +38,7 @@ export declare class Image {
     static fromJson(jsonObject?: any): Image;
 }
 export declare class MatchFacesRequest {
-    matchFacesImages?: MatchFacesImage[];
+    images?: MatchFacesImage[];
     customMetadata?: any;
     thumbnails?: boolean;
     static fromJson(jsonObject?: any): MatchFacesRequest;
@@ -47,6 +47,7 @@ export declare class MatchFacesImage {
     imageType?: number;
     detectAll?: boolean;
     bitmap?: string;
+    identifier?: string;
     static fromJson(jsonObject?: any): MatchFacesImage;
 }
 export declare class MatchFacesComparedFacesPair {
@@ -90,6 +91,14 @@ export declare class Rect {
     left?: number;
     right?: number;
     static fromJson(jsonObject?: any): Rect;
+}
+export declare class MatchFacesSimilarityThresholdSplit {
+    results?: MatchFacesComparedFacesPair[];
+    threshold?: number;
+    matchedFaces?: MatchFacesComparedFacesPair[];
+    unmatchedFaces?: MatchFacesComparedFacesPair[];
+    constructor(results: any, threshold: any);
+    getFaces(matched: boolean): MatchFacesComparedFacesPair[];
 }
 export declare const ComparedFacesPairErrorCodes: {
     IMAGE_EMPTY: number;
@@ -257,7 +266,9 @@ export declare class FaceSDK extends IonicNativePlugin {
      *  description
      *
      * @param {object} config int cameraId - set camera on Android
-     *  RFSCameraPosition cameraPositionIOS - set camera on iOS
+     *  CameraPosition cameraPositionIOS - set camera on iOS
+     *  boolean cameraSwitchEnabled
+     *  boolean showHelpTextAnimation
      * @return {Promise<any>} Returns a promise
      */
     presentFaceCaptureActivityWithConfig(config: any): Promise<any>;
@@ -265,7 +276,10 @@ export declare class FaceSDK extends IonicNativePlugin {
      *  description
      *
      * @param {object} config int cameraId - set camera on Android
-     *  RFSCameraPosition cameraPositionIOS - set camera on iOS
+     *  CameraPosition cameraPositionIOS - set camera on iOS
+     *  boolean cameraSwitchEnabled
+     *  boolean showHelpTextAnimation
+     *  boolean locationTrackingEnabled
      * @return {Promise<any>} Returns a promise
      */
     startLivenessWithConfig(config: any): Promise<any>;
@@ -301,7 +315,7 @@ export declare class FaceSDK extends IonicNativePlugin {
      *  description
      *
      * @param {MatchFacesRequest} request description
-     * @param {object} config description
+     * @param {object} config has no options yet
      * @return {Promise<any>} Returns a promise
      */
     matchFacesWithConfig(request: any, config: any): Promise<any>;

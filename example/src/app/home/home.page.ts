@@ -4,7 +4,7 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK } from '@regulaforensics/ionic-native-face-api-beta/ngx'
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK, MatchFacesSimilarityThresholdSplit } from '@regulaforensics/ionic-native-face-api-beta/ngx'
 
 var image1 = new MatchFacesImage()
 var image2 = new MatchFacesImage()
@@ -52,11 +52,11 @@ export class HomePage {
         return
       app.similarityResult.nativeElement.innerHTML = "Processing..."
       var request = new MatchFacesRequest()
-      request.matchFacesImages = [image1, image2]
+      request.images = [image1, image2]
       FaceSDK.matchFaces(JSON.stringify(request)).then(response => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
-        var results = response.results
-        app.similarityResult.nativeElement.innerHTML = results.length > 0 ? ((results[0].similarity * 100).toFixed(2) + "%") : "error"
+        var split = new MatchFacesSimilarityThresholdSplit(response.results, 0.75)
+        app.similarityResult.nativeElement.innerHTML = split.matchedFaces.length > 0 ? ((split.matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
       })
     }
 
