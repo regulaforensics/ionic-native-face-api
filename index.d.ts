@@ -100,13 +100,9 @@ export declare class MatchFacesSimilarityThresholdSplit {
     constructor(results: any, threshold: any);
     getFaces(matched: boolean): MatchFacesComparedFacesPair[];
 }
-export declare const ComparedFacesPairErrorCodes: {
-    IMAGE_EMPTY: number;
-    FACE_NOT_DETECTED: number;
-    LANDMARKS_NOT_DETECTED: number;
-    FACE_ALIGNER_FAILED: number;
-    DESCRIPTOR_EXTRACTOR_ERROR: number;
-    API_CALL_FAILED: number;
+export declare const CameraPosition: {
+    CameraPositionBack: number;
+    CameraPositionFront: number;
 };
 export declare const FaceCaptureResultCodes: {
     CANCEL: number;
@@ -116,10 +112,11 @@ export declare const FaceCaptureResultCodes: {
     CONTEXT_IS_NULL: number;
 };
 export declare const ImageType: {
-    IMAGE_TYPE_PRINTED: number;
-    IMAGE_TYPE_RFID: number;
-    IMAGE_TYPE_LIVE: number;
-    IMAGE_TYPE_LIVE_WITH_DOC: number;
+    PRINTED: number;
+    RFID: number;
+    LIVE: number;
+    DOCUMENT_WITH_LIVE: number;
+    EXTERNAL: number;
 };
 export declare const LivenessErrorCode: {
     CONTEXT_IS_NULL: number;
@@ -130,7 +127,6 @@ export declare const LivenessErrorCode: {
     PROCESSING_TIMEOUT: number;
     API_CALL_FAILED: number;
     PROCESSING_FAILED: number;
-    PROCESSING_ATTEMPTS_ENDED: number;
 };
 export declare const LivenessStatus: {
     PASSED: number;
@@ -143,24 +139,14 @@ export declare const MatchFacesErrorCodes: {
     FACE_ALIGNER_FAILED: number;
     DESCRIPTOR_EXTRACTOR_ERROR: number;
     NO_LICENSE: number;
-    NOT_INITIALIZED: number;
-    COMMAND_IS_NOT_SUPPORTED: number;
-    COMMAND_PARAMS_READ_ERROR: number;
+    COUNT_LIMIT_EXCEEDED: number;
     API_CALL_FAILED: number;
     PROCESSING_FAILED: number;
 };
-export declare const RFSCameraPosition: {
-    RFSCameraPositionBack: number;
-    RFSCameraPositionFront: number;
-};
 export declare const Enum: {
-    ComparedFacesPairErrorCodes: {
-        IMAGE_EMPTY: number;
-        FACE_NOT_DETECTED: number;
-        LANDMARKS_NOT_DETECTED: number;
-        FACE_ALIGNER_FAILED: number;
-        DESCRIPTOR_EXTRACTOR_ERROR: number;
-        API_CALL_FAILED: number;
+    CameraPosition: {
+        CameraPositionBack: number;
+        CameraPositionFront: number;
     };
     FaceCaptureResultCodes: {
         CANCEL: number;
@@ -170,10 +156,11 @@ export declare const Enum: {
         CONTEXT_IS_NULL: number;
     };
     ImageType: {
-        IMAGE_TYPE_PRINTED: number;
-        IMAGE_TYPE_RFID: number;
-        IMAGE_TYPE_LIVE: number;
-        IMAGE_TYPE_LIVE_WITH_DOC: number;
+        PRINTED: number;
+        RFID: number;
+        LIVE: number;
+        DOCUMENT_WITH_LIVE: number;
+        EXTERNAL: number;
     };
     LivenessErrorCode: {
         CONTEXT_IS_NULL: number;
@@ -184,7 +171,6 @@ export declare const Enum: {
         PROCESSING_TIMEOUT: number;
         API_CALL_FAILED: number;
         PROCESSING_FAILED: number;
-        PROCESSING_ATTEMPTS_ENDED: number;
     };
     LivenessStatus: {
         PASSED: number;
@@ -197,15 +183,9 @@ export declare const Enum: {
         FACE_ALIGNER_FAILED: number;
         DESCRIPTOR_EXTRACTOR_ERROR: number;
         NO_LICENSE: number;
-        NOT_INITIALIZED: number;
-        COMMAND_IS_NOT_SUPPORTED: number;
-        COMMAND_PARAMS_READ_ERROR: number;
+        COUNT_LIMIT_EXCEEDED: number;
         API_CALL_FAILED: number;
         PROCESSING_FAILED: number;
-    };
-    RFSCameraPosition: {
-        RFSCameraPositionBack: number;
-        RFSCameraPositionFront: number;
     };
 };
 /**
@@ -304,21 +284,6 @@ export declare class FaceSDKOriginal extends IonicNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     setLanguage(language: any): Promise<any>;
-    /**
-     *  change appearance
-     *
-     * @param {object} config description
-     * @return {Promise<any>} Returns a promise
-     */
-    setConfig(config: any): Promise<any>;
-    /**
-     *  description
-     *
-     * @param {MatchFacesRequest} request description
-     * @param {object} config has no options yet
-     * @return {Promise<any>} Returns a promise
-     */
-    matchFacesWithConfig(request: any, config: any): Promise<any>;
 }
 
 export declare const FaceSDK: FaceSDKOriginal;
