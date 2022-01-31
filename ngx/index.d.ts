@@ -93,18 +93,15 @@ export declare class Rect {
     static fromJson(jsonObject?: any): Rect;
 }
 export declare class MatchFacesSimilarityThresholdSplit {
-    results?: MatchFacesComparedFacesPair[];
-    threshold?: number;
     matchedFaces?: MatchFacesComparedFacesPair[];
     unmatchedFaces?: MatchFacesComparedFacesPair[];
-    constructor(results: any, threshold: any);
-    getFaces(matched: boolean): MatchFacesComparedFacesPair[];
+    static fromJson(jsonObject?: any): MatchFacesSimilarityThresholdSplit;
 }
 export declare const CameraPosition: {
-    CameraPositionBack: number;
-    CameraPositionFront: number;
+    Back: number;
+    Front: number;
 };
-export declare const FaceCaptureResultCodes: {
+export declare const FaceCaptureErrorCode: {
     CANCEL: number;
     CAMERA_NOT_AVAILABLE: number;
     CAMERA_NO_PERMISSION: number;
@@ -139,16 +136,16 @@ export declare const MatchFacesErrorCodes: {
     FACE_ALIGNER_FAILED: number;
     DESCRIPTOR_EXTRACTOR_ERROR: number;
     NO_LICENSE: number;
-    COUNT_LIMIT_EXCEEDED: number;
+    IMAGES_COUNT_LIMIT_EXCEEDED: number;
     API_CALL_FAILED: number;
     PROCESSING_FAILED: number;
 };
 export declare const Enum: {
     CameraPosition: {
-        CameraPositionBack: number;
-        CameraPositionFront: number;
+        Back: number;
+        Front: number;
     };
-    FaceCaptureResultCodes: {
+    FaceCaptureErrorCode: {
         CANCEL: number;
         CAMERA_NOT_AVAILABLE: number;
         CAMERA_NO_PERMISSION: number;
@@ -183,7 +180,7 @@ export declare const Enum: {
         FACE_ALIGNER_FAILED: number;
         DESCRIPTOR_EXTRACTOR_ERROR: number;
         NO_LICENSE: number;
-        COUNT_LIMIT_EXCEEDED: number;
+        IMAGES_COUNT_LIMIT_EXCEEDED: number;
         API_CALL_FAILED: number;
         PROCESSING_FAILED: number;
     };
@@ -284,4 +281,13 @@ export declare class FaceSDK extends IonicNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     setLanguage(language: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} faces facesArray: MatchFacesComparedFacesPair[]
+     *  faces = JSON.stringify(facesArray)
+     * @param {number} similarity description
+     * @return {Promise<any>} Returns a promise
+     */
+    matchFacesSimilarityThresholdSplit(faces: any, similarity: any): Promise<any>;
 }

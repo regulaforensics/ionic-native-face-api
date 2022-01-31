@@ -41,7 +41,7 @@ export class HomePage {
       FaceSDK.startLiveness().then(result => {
         result = LivenessResponse.fromJson(JSON.parse(result))
         image1.bitmap = result.bitmap
-        image1.imageType = Enum.ImageType.IMAGE_TYPE_LIVE
+        image1.imageType = Enum.ImageType.LIVE
         app.img1.nativeElement.src = "data:image/png;base64," + result.bitmap
         app.livenessResult.nativeElement.innerHTML = result["liveness"] == 0 ? "passed" : "not passed"
       })
@@ -55,8 +55,10 @@ export class HomePage {
       request.images = [image1, image2]
       FaceSDK.matchFaces(JSON.stringify(request)).then(response => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
-        var split = new MatchFacesSimilarityThresholdSplit(response.results, 0.75)
-        app.similarityResult.nativeElement.innerHTML = split.matchedFaces.length > 0 ? ((split.matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
+        FaceSDK.matchFacesSimilarityThresholdSplit(JSON.stringify(response.results), 0.75).then(str => {
+          var split = MatchFacesSimilarityThresholdSplit.fromJson(JSON.parse(str))
+          app.similarityResult.nativeElement.innerHTML = split.matchedFaces.length > 0 ? ((split.matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
+        })
       })
     }
 
@@ -72,7 +74,7 @@ export class HomePage {
     function pickImage(first: boolean) {
       app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button) => {
         if (button == 1)
-        FaceSDK.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.ImageType.IMAGE_TYPE_LIVE))
+        FaceSDK.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.ImageType.LIVE))
         else if (button == 2)
           if (app.platform.is("android"))
             useGalleryAndroid(first)
@@ -104,7 +106,7 @@ export class HomePage {
         File.readAsDataURL(
           (app.platform.is("ios") ? "file://" : "") + results[0].substring(0, (results[0] as string).lastIndexOf("/")),
           results[0].substring((results[0] as string).lastIndexOf("/") + 1)).then(
-            (file => setImage(first, (file as string).substring(23), Enum.ImageType.IMAGE_TYPE_PRINTED))
+            (file => setImage(first, (file as string).substring(23), Enum.ImageType.PRINTED))
           )
       })
     }
