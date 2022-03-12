@@ -246,6 +246,7 @@ export declare class FaceSDKOriginal extends IonicNativePlugin {
      *  CameraPosition cameraPositionIOS - set camera on iOS
      *  boolean cameraSwitchEnabled
      *  boolean showHelpTextAnimation
+     *  boolean forceToUseHuaweiVision
      * @return {Promise<any>} Returns a promise
      */
     presentFaceCaptureActivityWithConfig(config: any): Promise<any>;
@@ -257,6 +258,7 @@ export declare class FaceSDKOriginal extends IonicNativePlugin {
      *  boolean cameraSwitchEnabled
      *  boolean showHelpTextAnimation
      *  boolean locationTrackingEnabled
+     *  boolean forceToUseHuaweiVision
      * @return {Promise<any>} Returns a promise
      */
     startLivenessWithConfig(config: any): Promise<any>;
