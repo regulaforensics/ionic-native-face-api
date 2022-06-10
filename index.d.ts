@@ -247,6 +247,8 @@ export declare class FaceSDKOriginal extends IonicNativePlugin {
      *  boolean cameraSwitchEnabled
      *  boolean showHelpTextAnimation
      *  boolean forceToUseHuaweiVision
+     *  boolean closeButtonEnabled
+     *  boolean torchButtonEnabled
      * @return {Promise<any>} Returns a promise
      */
     presentFaceCaptureActivityWithConfig(config: any): Promise<any>;
@@ -259,6 +261,8 @@ export declare class FaceSDKOriginal extends IonicNativePlugin {
      *  boolean showHelpTextAnimation
      *  boolean locationTrackingEnabled
      *  boolean forceToUseHuaweiVision
+     *  boolean closeButtonEnabled
+     *  boolean torchButtonEnabled
      * @return {Promise<any>} Returns a promise
      */
     startLivenessWithConfig(config: any): Promise<any>;
@@ -276,6 +280,14 @@ export declare class FaceSDKOriginal extends IonicNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     matchFaces(request: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {MatchFacesRequest} request description
+     * @param {object} config boolean forceToUseHuaweiVision
+     * @return {Promise<any>} Returns a promise
+     */
+    matchFacesWithConfig(request: any, config: any): Promise<any>;
     /**
      *  description
      *
