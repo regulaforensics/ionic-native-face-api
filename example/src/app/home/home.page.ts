@@ -1,8 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core'
-import { File } from '@ionic-native/file'
-import { ImagePicker } from '@ionic-native/image-picker/ngx'
-import { Dialogs } from '@ionic-native/dialogs/ngx'
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
+import { File } from '@awesome-cordova-plugins/file'
+import { ImagePicker } from '@awesome-cordova-plugins/image-picker/ngx'
+import { Dialogs } from '@awesome-cordova-plugins/dialogs/ngx'
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx'
 import { Platform } from '@ionic/angular'
 import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK, MatchFacesSimilarityThresholdSplit } from '@regulaforensics/ionic-native-face-api-beta/ngx'
 
