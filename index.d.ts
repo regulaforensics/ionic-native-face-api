@@ -1,54 +1,54 @@
-import { IonicNativePlugin } from '@ionic-native/core';
+import { AwesomeCordovaNativePlugin } from '@awesome-cordova-plugins/core';
 export declare class FaceCaptureException {
     errorCode?: number;
     message?: string;
-    static fromJson(jsonObject?: any): FaceCaptureException;
+    static fromJson(jsonObject?: any): FaceCaptureException | undefined;
 }
 export declare class LivenessErrorException {
     errorCode?: number;
     message?: string;
-    static fromJson(jsonObject?: any): LivenessErrorException;
+    static fromJson(jsonObject?: any): LivenessErrorException | undefined;
 }
 export declare class MatchFacesException {
     errorCode?: number;
     message?: string;
-    static fromJson(jsonObject?: any): MatchFacesException;
+    static fromJson(jsonObject?: any): MatchFacesException | undefined;
 }
 export declare class FaceCaptureResponse {
     exception?: FaceCaptureException;
     image?: Image;
-    static fromJson(jsonObject?: any): FaceCaptureResponse;
+    static fromJson(jsonObject?: any): FaceCaptureResponse | undefined;
 }
 export declare class LivenessResponse {
     bitmap?: string;
     liveness?: number;
     guid?: string;
     exception?: LivenessErrorException;
-    static fromJson(jsonObject?: any): LivenessResponse;
+    static fromJson(jsonObject?: any): LivenessResponse | undefined;
 }
 export declare class MatchFacesResponse {
     exception?: MatchFacesException;
     detections?: MatchFacesDetection[];
     results?: MatchFacesComparedFacesPair[];
-    static fromJson(jsonObject?: any): MatchFacesResponse;
+    static fromJson(jsonObject?: any): MatchFacesResponse | undefined;
 }
 export declare class Image {
     imageType?: number;
     bitmap?: string;
-    static fromJson(jsonObject?: any): Image;
+    static fromJson(jsonObject?: any): Image | undefined;
 }
 export declare class MatchFacesRequest {
     images?: MatchFacesImage[];
     customMetadata?: any;
     thumbnails?: boolean;
-    static fromJson(jsonObject?: any): MatchFacesRequest;
+    static fromJson(jsonObject?: any): MatchFacesRequest | undefined;
 }
 export declare class MatchFacesImage {
     imageType?: number;
     detectAll?: boolean;
     bitmap?: string;
     identifier?: string;
-    static fromJson(jsonObject?: any): MatchFacesImage;
+    static fromJson(jsonObject?: any): MatchFacesImage | undefined;
 }
 export declare class MatchFacesComparedFacesPair {
     first?: MatchFacesComparedFace;
@@ -56,14 +56,14 @@ export declare class MatchFacesComparedFacesPair {
     similarity?: number;
     score?: number;
     exception?: MatchFacesException;
-    static fromJson(jsonObject?: any): MatchFacesComparedFacesPair;
+    static fromJson(jsonObject?: any): MatchFacesComparedFacesPair | undefined;
 }
 export declare class MatchFacesComparedFace {
     face?: MatchFacesDetectionFace;
     image?: MatchFacesImage;
     faceIndex?: number;
     imageIndex?: number;
-    static fromJson(jsonObject?: any): MatchFacesComparedFace;
+    static fromJson(jsonObject?: any): MatchFacesComparedFace | undefined;
 }
 export declare class MatchFacesDetectionFace {
     faceIndex?: number;
@@ -71,49 +71,39 @@ export declare class MatchFacesDetectionFace {
     faceRect?: Rect;
     rotationAngle?: number;
     thumbnail?: string;
-    static fromJson(jsonObject?: any): MatchFacesDetectionFace;
+    static fromJson(jsonObject?: any): MatchFacesDetectionFace | undefined;
 }
 export declare class MatchFacesDetection {
     image?: MatchFacesImage;
     imageIndex?: number;
     faces?: MatchFacesDetectionFace[];
     exception?: MatchFacesException;
-    static fromJson(jsonObject?: any): MatchFacesDetection;
+    static fromJson(jsonObject?: any): MatchFacesDetection | undefined;
 }
 export declare class Point {
     x?: number;
     y?: number;
-    static fromJson(jsonObject?: any): Point;
+    static fromJson(jsonObject?: any): Point | undefined;
 }
 export declare class Rect {
     bottom?: number;
     top?: number;
     left?: number;
     right?: number;
-    static fromJson(jsonObject?: any): Rect;
+    static fromJson(jsonObject?: any): Rect | undefined;
 }
 export declare class MatchFacesSimilarityThresholdSplit {
     matchedFaces?: MatchFacesComparedFacesPair[];
     unmatchedFaces?: MatchFacesComparedFacesPair[];
-    static fromJson(jsonObject?: any): MatchFacesSimilarityThresholdSplit;
+    static fromJson(jsonObject?: any): MatchFacesSimilarityThresholdSplit | undefined;
 }
 export declare const CameraPosition: {
     Back: number;
     Front: number;
 };
-export declare const FaceCaptureErrorCode: {
-    CANCEL: number;
-    CAMERA_NOT_AVAILABLE: number;
-    CAMERA_NO_PERMISSION: number;
-    IN_PROGRESS_ALREADY: number;
-    CONTEXT_IS_NULL: number;
-};
-export declare const ImageType: {
-    PRINTED: number;
-    RFID: number;
-    LIVE: number;
-    DOCUMENT_WITH_LIVE: number;
-    EXTERNAL: number;
+export declare const LivenessStatus: {
+    PASSED: number;
+    UNKNOWN: number;
 };
 export declare const LivenessErrorCode: {
     CONTEXT_IS_NULL: number;
@@ -125,9 +115,19 @@ export declare const LivenessErrorCode: {
     API_CALL_FAILED: number;
     PROCESSING_FAILED: number;
 };
-export declare const LivenessStatus: {
-    PASSED: number;
-    UNKNOWN: number;
+export declare const ImageType: {
+    PRINTED: number;
+    RFID: number;
+    LIVE: number;
+    DOCUMENT_WITH_LIVE: number;
+    EXTERNAL: number;
+};
+export declare const FaceCaptureErrorCode: {
+    CANCEL: number;
+    CAMERA_NOT_AVAILABLE: number;
+    CAMERA_NO_PERMISSION: number;
+    IN_PROGRESS_ALREADY: number;
+    CONTEXT_IS_NULL: number;
 };
 export declare const MatchFacesErrorCodes: {
     IMAGE_EMPTY: number;
@@ -145,19 +145,9 @@ export declare const Enum: {
         Back: number;
         Front: number;
     };
-    FaceCaptureErrorCode: {
-        CANCEL: number;
-        CAMERA_NOT_AVAILABLE: number;
-        CAMERA_NO_PERMISSION: number;
-        IN_PROGRESS_ALREADY: number;
-        CONTEXT_IS_NULL: number;
-    };
-    ImageType: {
-        PRINTED: number;
-        RFID: number;
-        LIVE: number;
-        DOCUMENT_WITH_LIVE: number;
-        EXTERNAL: number;
+    LivenessStatus: {
+        PASSED: number;
+        UNKNOWN: number;
     };
     LivenessErrorCode: {
         CONTEXT_IS_NULL: number;
@@ -169,9 +159,19 @@ export declare const Enum: {
         API_CALL_FAILED: number;
         PROCESSING_FAILED: number;
     };
-    LivenessStatus: {
-        PASSED: number;
-        UNKNOWN: number;
+    ImageType: {
+        PRINTED: number;
+        RFID: number;
+        LIVE: number;
+        DOCUMENT_WITH_LIVE: number;
+        EXTERNAL: number;
+    };
+    FaceCaptureErrorCode: {
+        CANCEL: number;
+        CAMERA_NOT_AVAILABLE: number;
+        CAMERA_NO_PERMISSION: number;
+        IN_PROGRESS_ALREADY: number;
+        CONTEXT_IS_NULL: number;
     };
     MatchFacesErrorCodes: {
         IMAGE_EMPTY: number;
@@ -202,7 +202,7 @@ export declare const Enum: {
  *
  * ```
  */
-export declare class FaceSDKOriginal extends IonicNativePlugin {
+export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
     /**
      *  description
      *
