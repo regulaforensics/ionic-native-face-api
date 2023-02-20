@@ -35,7 +35,16 @@ export class HomePage {
     app.matchFacesButton.nativeElement.addEventListener("click", matchFaces)
     app.livenessButton.nativeElement.addEventListener("click", liveness)
     app.clearResultsButton.nativeElement.addEventListener("click", clearResults)
-    app.platform.ready()
+    
+    app.platform.ready().then(() => {
+      FaceSDK.init().then(json => {
+        var response = JSON.stringify(json)
+        if (!response["success"]) {
+          console.log("Init failed: ");
+          console.log(json);
+        }
+      })
+    })
 
     function liveness() {
       FaceSDK.startLiveness().then(result => {
@@ -43,7 +52,7 @@ export class HomePage {
         image1.bitmap = result.bitmap
         image1.imageType = Enum.ImageType.LIVE
         app.img1.nativeElement.src = "data:image/png;base64," + result.bitmap
-        app.livenessResult.nativeElement.innerHTML = result["liveness"] == 0 ? "passed" : "not passed"
+        app.livenessResult.nativeElement.innerHTML = result["liveness"] == Enum.LivenessStatus.PASSED ? "passed" : "not passed"
       })
     }
 
