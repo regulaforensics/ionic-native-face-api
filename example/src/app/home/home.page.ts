@@ -39,9 +39,11 @@ export class HomePage {
     app.platform.ready().then(() => {
       FaceSDK.init().then(json => {
         var response = JSON.stringify(json)
-        if (!response["success"]) {
+        if (response["success"] == false) {
           console.log("Init failed: ");
           console.log(json);
+        } else {
+          console.log("Init complete")
         }
       })
     })
