@@ -1,16 +1,27 @@
 import { AwesomeCordovaNativePlugin } from '@awesome-cordova-plugins/core';
 export declare class FaceCaptureException {
-    errorCode?: number;
+    errorCode?: string;
     message?: string;
     static fromJson(jsonObject?: any): FaceCaptureException | undefined;
 }
+export declare class InitException {
+    errorCode?: string;
+    message?: string;
+    static fromJson(jsonObject?: any): InitException | undefined;
+}
 export declare class LivenessErrorException {
-    errorCode?: number;
+    errorCode?: string;
+    underlyingException?: LivenessBackendException;
     message?: string;
     static fromJson(jsonObject?: any): LivenessErrorException | undefined;
 }
-export declare class MatchFacesException {
+export declare class LivenessBackendException {
     errorCode?: number;
+    message?: string;
+    static fromJson(jsonObject?: any): LivenessBackendException | undefined;
+}
+export declare class MatchFacesException {
+    errorCode?: string;
     message?: string;
     static fromJson(jsonObject?: any): MatchFacesException | undefined;
 }
@@ -21,8 +32,9 @@ export declare class FaceCaptureResponse {
 }
 export declare class LivenessResponse {
     bitmap?: string;
-    liveness?: number;
-    guid?: string;
+    liveness?: string;
+    sessionId?: string;
+    transactionId?: string;
     exception?: LivenessErrorException;
     static fromJson(jsonObject?: any): LivenessResponse | undefined;
 }
@@ -35,6 +47,8 @@ export declare class MatchFacesResponse {
 export declare class Image {
     imageType?: number;
     bitmap?: string;
+    tag?: string;
+    imageData?: any[];
     static fromJson(jsonObject?: any): Image | undefined;
 }
 export declare class MatchFacesRequest {
@@ -97,23 +111,235 @@ export declare class MatchFacesSimilarityThresholdSplit {
     unmatchedFaces?: MatchFacesComparedFacesPair[];
     static fromJson(jsonObject?: any): MatchFacesSimilarityThresholdSplit | undefined;
 }
-export declare const CameraPosition: {
-    Back: number;
-    Front: number;
-};
-export declare const LivenessStatus: {
-    PASSED: number;
+export declare class DetectFacesRequest {
+    scenario?: string;
+    image?: string;
+    configuration?: DetectFacesConfiguration;
+    static fromJson(jsonObject?: any): DetectFacesRequest | undefined;
+}
+export declare class DetectFacesConfiguration {
+    attributes?: string[];
+    customQuality?: ImageQualityCharacteristic[];
+    outputImageParams?: OutputImageParams;
+    onlyCentralFace?: boolean;
+    static fromJson(jsonObject?: any): DetectFacesConfiguration | undefined;
+}
+export declare class OutputImageParams {
+    backgroundColor?: string;
+    crop?: OutputImageCrop;
+    static fromJson(jsonObject?: any): OutputImageParams | undefined;
+}
+export declare class OutputImageCrop {
+    type?: number;
+    size?: Size;
+    padColor?: string;
+    returnOriginalRect?: boolean;
+    static fromJson(jsonObject?: any): OutputImageCrop | undefined;
+}
+export declare class ImageQualityCharacteristic {
+    characteristicName?: string;
+    imageQualityGroup?: number;
+    recommendedRange?: ImageQualityRange;
+    customRange?: ImageQualityRange;
+    static fromJson(jsonObject?: any): ImageQualityCharacteristic | undefined;
+}
+export declare class ImageQualityRange {
+    min?: number;
+    max?: number;
+    static fromJson(jsonObject?: any): ImageQualityRange | undefined;
+}
+export declare class Size {
+    width?: number;
+    height?: number;
+    static fromJson(jsonObject?: any): Size | undefined;
+}
+export declare class DetectFacesResponse {
+    detection?: DetectFaceResult;
+    scenario?: string;
+    error?: DetectFacesErrorException;
+    allDetections?: DetectFaceResult[];
+    static fromJson(jsonObject?: any): DetectFacesResponse | undefined;
+}
+export declare class DetectFacesErrorException {
+    errorCode?: string;
+    underlyingException?: DetectFacesBackendException;
+    message?: string;
+    static fromJson(jsonObject?: any): DetectFacesErrorException | undefined;
+}
+export declare class DetectFacesBackendException {
+    errorCode?: number;
+    message?: string;
+    static fromJson(jsonObject?: any): DetectFacesBackendException | undefined;
+}
+export declare class DetectFaceResult {
+    quality?: ImageQualityResult[];
+    attributes?: DetectFacesAttributeResult[];
+    landmarks?: Point[];
+    crop?: string;
+    faceRect?: Rect;
+    originalRect?: Rect;
+    isQualityCompliant?: boolean;
+    static fromJson(jsonObject?: any): DetectFaceResult | undefined;
+}
+export declare class ImageQualityResult {
+    name?: string;
+    group?: number;
+    status?: number;
+    range?: ImageQualityRange;
+    value?: number;
+    static fromJson(jsonObject?: any): ImageQualityResult | undefined;
+}
+export declare class DetectFacesAttributeResult {
+    attribute?: string;
+    value?: string;
+    range?: ImageQualityRange;
+    confidence?: number;
+    static fromJson(jsonObject?: any): DetectFacesAttributeResult | undefined;
+}
+export declare const ImageQualityGroupName: {
+    IMAGE_CHARACTERISTICS: number;
+    HEAD_SIZE_AND_POSITION: number;
+    FACE_QUALITY: number;
+    EYES_CHARACTERISTICS: number;
+    SHADOWS_AND_LIGHTNING: number;
+    POSE_AND_EXPRESSION: number;
+    HEAD_OCCLUSION: number;
+    BACKGROUND: number;
     UNKNOWN: number;
 };
+export declare const DetectFacesErrorCode: {
+    IMAGE_EMPTY: string;
+    FR_FACE_NOT_DETECTED: string;
+    FACER_NO_LICENSE: string;
+    FACER_IS_NOT_INITIALIZED: string;
+    FACER_COMMAND_IS_NOT_SUPPORTED: string;
+    FACER_COMMAND_PARAMS_READ_ERROR: string;
+    PROCESSING_FAILED: string;
+    REQUEST_FAILED: string;
+    API_CALL_FAILED: string;
+};
+export declare const InitErrorCode: {
+    IN_PROGRESS_ALREADY: string;
+    CONTEXT_IS_NULL: string;
+    MISSING_CORE: string;
+    INTERNAL_CORE_ERROR: string;
+};
+export declare const LivenessStatus: {
+    PASSED: string;
+    UNKNOWN: string;
+};
+export declare const CameraErrorCode: {
+    CAMERA_NOT_AVAILABLE: string;
+    CAMERA_NO_PERMISSION: string;
+};
 export declare const LivenessErrorCode: {
-    CONTEXT_IS_NULL: number;
-    IN_PROGRESS_ALREADY: number;
-    ZOOM_NOT_SUPPORTED: number;
-    NO_LICENSE: number;
-    CANCELLED: number;
-    PROCESSING_TIMEOUT: number;
-    API_CALL_FAILED: number;
-    PROCESSING_FAILED: number;
+    CONTEXT_IS_NULL: string;
+    IN_PROGRESS_ALREADY: string;
+    ZOOM_NOT_SUPPORTED: string;
+    NO_LICENSE: string;
+    CANCELLED: string;
+    PROCESSING_TIMEOUT: string;
+    API_CALL_FAILED: string;
+    PROCESSING_FAILED: string;
+    NOT_INITIALIZED: string;
+    CAMERA_NO_PERMISSION: string;
+    CAMERA_NOT_AVAILABLE: string;
+    PROCESSING_FRAME_FAILED: string;
+};
+export declare const DetectFacesBackendErrorCode: {
+    FR_FACE_NOT_DETECTED: number;
+    FACER_NO_LICENSE: number;
+    FACER_IS_NOT_INITIALIZED: number;
+    FACER_COMMAND_IS_NOT_SUPPORTED: number;
+    FACER_COMMAND_PARAMS_READ_ERROR: number;
+    UNDEFINED: number;
+};
+export declare const MatchFacesErrorCode: {
+    IMAGE_EMPTY: string;
+    FACE_NOT_DETECTED: string;
+    LANDMARKS_NOT_DETECTED: string;
+    FACE_ALIGNER_FAILED: string;
+    DESCRIPTOR_EXTRACTOR_ERROR: string;
+    NO_LICENSE: string;
+    IMAGES_COUNT_LIMIT_EXCEEDED: string;
+    API_CALL_FAILED: string;
+    PROCESSING_FAILED: string;
+};
+export declare const ImageQualityCharacteristicName: {
+    IMAGE_WIDTH: string;
+    IMAGE_HEIGHT: string;
+    IMAGE_WIDTH_TO_HEIGHT: string;
+    IMAGE_CHANNELS_NUMBER: string;
+    PADDING_RATIO: string;
+    FACE_MID_POINT_HORIZONTAL_POSITION: string;
+    FACE_MID_POINT_VERTICAL_POSITION: string;
+    HEAD_WIDTH_RATIO: string;
+    HEAD_HEIGHT_RATIO: string;
+    EYES_DISTANCE: string;
+    YAW: string;
+    PITCH: string;
+    ROLL: string;
+    BLUR_LEVEL: string;
+    NOISE_LEVEL: string;
+    UNNATURAL_SKIN_TONE: string;
+    FACE_DYNAMIC_RANGE: string;
+    EYE_RIGHT_CLOSED: string;
+    EYE_LEFT_CLOSED: string;
+    EYE_RIGHT_OCCLUDED: string;
+    EYE_LEFT_OCCLUDED: string;
+    EYES_RED: string;
+    EYE_RIGHT_COVERED_WITH_HAIR: string;
+    EYE_LEFT_COVERED_WITH_HAIR: string;
+    OFF_GAZE: string;
+    TOO_DARK: string;
+    TOO_LIGHT: string;
+    FACE_GLARE: string;
+    SHADOWS_ON_FACE: string;
+    SHOULDERS_POSE: string;
+    EXPRESSION_LEVEL: string;
+    MOUTH_OPEN: string;
+    SMILE: string;
+    DARK_GLASSES: string;
+    REFLECTION_ON_GLASSES: string;
+    FRAMES_TOO_HEAVY: string;
+    FACE_OCCLUDED: string;
+    HEAD_COVERING: string;
+    FOREHEAD_COVERING: string;
+    STRONG_MAKEUP: string;
+    HEAD_PHONES: string;
+    MEDICAL_MASK: string;
+    BACKGROUND_UNIFORMITY: string;
+    SHADOWS_ON_BACKGROUND: string;
+    OTHER_FACES: string;
+    BACKGROUND_COLOR_MATCH: string;
+    UNKNOWN: string;
+};
+export declare const DetectFacesScenario: {
+    CROP_CENTRAL_FACE: string;
+    CROP_ALL_FACES: string;
+    THUMBNAIL: string;
+    ATTRIBUTES_ALL: string;
+    QUALITY_FULL: string;
+    QUALITY_ICAO: string;
+    QUALITY_VISA_SCHENGEN: string;
+    QUALITY_VISA_USA: string;
+};
+export declare const OutputImageCropAspectRatio: {
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: number;
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_4X5: number;
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_2X3: number;
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_1X1: number;
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
+};
+export declare const LivenessSkipStep: {
+    NONE: number;
+    START_STEP: number;
+    DONE_STEP: number;
+};
+export declare const ImageQualityResultStatus: {
+    IMAGE_QUALITY_RESULT_STATUS_FALSE: number;
+    IMAGE_QUALITY_RESULT_STATUS_TRUE: number;
+    IMAGE_QUALITY_RESULT_STATUS_UNDETERMINED: number;
 };
 export declare const ImageType: {
     PRINTED: number;
@@ -121,43 +347,200 @@ export declare const ImageType: {
     LIVE: number;
     DOCUMENT_WITH_LIVE: number;
     EXTERNAL: number;
+    GHOST_PORTRAIT: number;
 };
 export declare const FaceCaptureErrorCode: {
-    CANCEL: number;
-    CAMERA_NOT_AVAILABLE: number;
-    CAMERA_NO_PERMISSION: number;
-    IN_PROGRESS_ALREADY: number;
-    CONTEXT_IS_NULL: number;
+    CANCEL: string;
+    CAMERA_NOT_AVAILABLE: string;
+    CAMERA_NO_PERMISSION: string;
+    IN_PROGRESS_ALREADY: string;
+    CONTEXT_IS_NULL: string;
+    TIMEOUT: string;
+    NOT_INITIALIZED: string;
 };
-export declare const MatchFacesErrorCodes: {
-    IMAGE_EMPTY: number;
-    FACE_NOT_DETECTED: number;
-    LANDMARKS_NOT_DETECTED: number;
-    FACE_ALIGNER_FAILED: number;
-    DESCRIPTOR_EXTRACTOR_ERROR: number;
+export declare const LivenessBackendErrorCode: {
+    UNDEFINED: number;
     NO_LICENSE: number;
+    LOW_QUALITY: number;
+    HIGH_ASYMMETRY: number;
+    TRACK_BREAK: number;
+    CLOSED_EYES_DETECTED: number;
+    FACE_OVER_EMOTIONAL: number;
+    SUNGLASSES_DETECTED: number;
+    SMALL_AGE: number;
+    HEADDRESS_DETECTED: number;
+    MEDICINE_MASK_DETECTED: number;
+    OCCLUSION_DETECTED: number;
+    FOREHEAD_GLASSES_DETECTED: number;
+    MOUTH_OPENED: number;
+    ART_MASK_DETECTED: number;
+    NOT_MATCHED: number;
     IMAGES_COUNT_LIMIT_EXCEEDED: number;
-    API_CALL_FAILED: number;
-    PROCESSING_FAILED: number;
+    ELECTRONIC_DEVICE_DETECTED: number;
+    WRONG_GEO: number;
+    WRONG_OF: number;
+    WRONG_VIEW: number;
+};
+export declare const DetectFacesAttribute: {
+    AGE: string;
+    EYE_RIGHT: string;
+    EYE_LEFT: string;
+    EMOTION: string;
+    SMILE: string;
+    GLASSES: string;
+    HEAD_COVERING: string;
+    FOREHEAD_COVERING: string;
+    MOUTH: string;
+    MEDICAL_MASK: string;
+    OCCLUSION: string;
+    STRONG_MAKEUP: string;
+    HEADPHONES: string;
 };
 export declare const Enum: {
-    CameraPosition: {
-        Back: number;
-        Front: number;
-    };
-    LivenessStatus: {
-        PASSED: number;
+    ImageQualityGroupName: {
+        IMAGE_CHARACTERISTICS: number;
+        HEAD_SIZE_AND_POSITION: number;
+        FACE_QUALITY: number;
+        EYES_CHARACTERISTICS: number;
+        SHADOWS_AND_LIGHTNING: number;
+        POSE_AND_EXPRESSION: number;
+        HEAD_OCCLUSION: number;
+        BACKGROUND: number;
         UNKNOWN: number;
     };
+    DetectFacesErrorCode: {
+        IMAGE_EMPTY: string;
+        FR_FACE_NOT_DETECTED: string;
+        FACER_NO_LICENSE: string;
+        FACER_IS_NOT_INITIALIZED: string;
+        FACER_COMMAND_IS_NOT_SUPPORTED: string;
+        FACER_COMMAND_PARAMS_READ_ERROR: string;
+        PROCESSING_FAILED: string;
+        REQUEST_FAILED: string;
+        API_CALL_FAILED: string;
+    };
+    InitErrorCode: {
+        IN_PROGRESS_ALREADY: string;
+        CONTEXT_IS_NULL: string;
+        MISSING_CORE: string;
+        INTERNAL_CORE_ERROR: string;
+    };
+    LivenessStatus: {
+        PASSED: string;
+        UNKNOWN: string;
+    };
+    CameraErrorCode: {
+        CAMERA_NOT_AVAILABLE: string;
+        CAMERA_NO_PERMISSION: string;
+    };
     LivenessErrorCode: {
-        CONTEXT_IS_NULL: number;
-        IN_PROGRESS_ALREADY: number;
-        ZOOM_NOT_SUPPORTED: number;
-        NO_LICENSE: number;
-        CANCELLED: number;
-        PROCESSING_TIMEOUT: number;
-        API_CALL_FAILED: number;
-        PROCESSING_FAILED: number;
+        CONTEXT_IS_NULL: string;
+        IN_PROGRESS_ALREADY: string;
+        ZOOM_NOT_SUPPORTED: string;
+        NO_LICENSE: string;
+        CANCELLED: string;
+        PROCESSING_TIMEOUT: string;
+        API_CALL_FAILED: string;
+        PROCESSING_FAILED: string;
+        NOT_INITIALIZED: string;
+        CAMERA_NO_PERMISSION: string;
+        CAMERA_NOT_AVAILABLE: string;
+        PROCESSING_FRAME_FAILED: string;
+    };
+    DetectFacesBackendErrorCode: {
+        FR_FACE_NOT_DETECTED: number;
+        FACER_NO_LICENSE: number;
+        FACER_IS_NOT_INITIALIZED: number;
+        FACER_COMMAND_IS_NOT_SUPPORTED: number;
+        FACER_COMMAND_PARAMS_READ_ERROR: number;
+        UNDEFINED: number;
+    };
+    MatchFacesErrorCode: {
+        IMAGE_EMPTY: string;
+        FACE_NOT_DETECTED: string;
+        LANDMARKS_NOT_DETECTED: string;
+        FACE_ALIGNER_FAILED: string;
+        DESCRIPTOR_EXTRACTOR_ERROR: string;
+        NO_LICENSE: string;
+        IMAGES_COUNT_LIMIT_EXCEEDED: string;
+        API_CALL_FAILED: string;
+        PROCESSING_FAILED: string;
+    };
+    ImageQualityCharacteristicName: {
+        IMAGE_WIDTH: string;
+        IMAGE_HEIGHT: string;
+        IMAGE_WIDTH_TO_HEIGHT: string;
+        IMAGE_CHANNELS_NUMBER: string;
+        PADDING_RATIO: string;
+        FACE_MID_POINT_HORIZONTAL_POSITION: string;
+        FACE_MID_POINT_VERTICAL_POSITION: string;
+        HEAD_WIDTH_RATIO: string;
+        HEAD_HEIGHT_RATIO: string;
+        EYES_DISTANCE: string;
+        YAW: string;
+        PITCH: string;
+        ROLL: string;
+        BLUR_LEVEL: string;
+        NOISE_LEVEL: string;
+        UNNATURAL_SKIN_TONE: string;
+        FACE_DYNAMIC_RANGE: string;
+        EYE_RIGHT_CLOSED: string;
+        EYE_LEFT_CLOSED: string;
+        EYE_RIGHT_OCCLUDED: string;
+        EYE_LEFT_OCCLUDED: string;
+        EYES_RED: string;
+        EYE_RIGHT_COVERED_WITH_HAIR: string;
+        EYE_LEFT_COVERED_WITH_HAIR: string;
+        OFF_GAZE: string;
+        TOO_DARK: string;
+        TOO_LIGHT: string;
+        FACE_GLARE: string;
+        SHADOWS_ON_FACE: string;
+        SHOULDERS_POSE: string;
+        EXPRESSION_LEVEL: string;
+        MOUTH_OPEN: string;
+        SMILE: string;
+        DARK_GLASSES: string;
+        REFLECTION_ON_GLASSES: string;
+        FRAMES_TOO_HEAVY: string;
+        FACE_OCCLUDED: string;
+        HEAD_COVERING: string;
+        FOREHEAD_COVERING: string;
+        STRONG_MAKEUP: string;
+        HEAD_PHONES: string;
+        MEDICAL_MASK: string;
+        BACKGROUND_UNIFORMITY: string;
+        SHADOWS_ON_BACKGROUND: string;
+        OTHER_FACES: string;
+        BACKGROUND_COLOR_MATCH: string;
+        UNKNOWN: string;
+    };
+    DetectFacesScenario: {
+        CROP_CENTRAL_FACE: string;
+        CROP_ALL_FACES: string;
+        THUMBNAIL: string;
+        ATTRIBUTES_ALL: string;
+        QUALITY_FULL: string;
+        QUALITY_ICAO: string;
+        QUALITY_VISA_SCHENGEN: string;
+        QUALITY_VISA_USA: string;
+    };
+    OutputImageCropAspectRatio: {
+        OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: number;
+        OUTPUT_IMAGE_CROP_ASPECT_RATIO_4X5: number;
+        OUTPUT_IMAGE_CROP_ASPECT_RATIO_2X3: number;
+        OUTPUT_IMAGE_CROP_ASPECT_RATIO_1X1: number;
+        OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
+    };
+    LivenessSkipStep: {
+        NONE: number;
+        START_STEP: number;
+        DONE_STEP: number;
+    };
+    ImageQualityResultStatus: {
+        IMAGE_QUALITY_RESULT_STATUS_FALSE: number;
+        IMAGE_QUALITY_RESULT_STATUS_TRUE: number;
+        IMAGE_QUALITY_RESULT_STATUS_UNDETERMINED: number;
     };
     ImageType: {
         PRINTED: number;
@@ -165,24 +548,54 @@ export declare const Enum: {
         LIVE: number;
         DOCUMENT_WITH_LIVE: number;
         EXTERNAL: number;
+        GHOST_PORTRAIT: number;
     };
     FaceCaptureErrorCode: {
-        CANCEL: number;
-        CAMERA_NOT_AVAILABLE: number;
-        CAMERA_NO_PERMISSION: number;
-        IN_PROGRESS_ALREADY: number;
-        CONTEXT_IS_NULL: number;
+        CANCEL: string;
+        CAMERA_NOT_AVAILABLE: string;
+        CAMERA_NO_PERMISSION: string;
+        IN_PROGRESS_ALREADY: string;
+        CONTEXT_IS_NULL: string;
+        TIMEOUT: string;
+        NOT_INITIALIZED: string;
     };
-    MatchFacesErrorCodes: {
-        IMAGE_EMPTY: number;
-        FACE_NOT_DETECTED: number;
-        LANDMARKS_NOT_DETECTED: number;
-        FACE_ALIGNER_FAILED: number;
-        DESCRIPTOR_EXTRACTOR_ERROR: number;
+    LivenessBackendErrorCode: {
+        UNDEFINED: number;
         NO_LICENSE: number;
+        LOW_QUALITY: number;
+        HIGH_ASYMMETRY: number;
+        TRACK_BREAK: number;
+        CLOSED_EYES_DETECTED: number;
+        FACE_OVER_EMOTIONAL: number;
+        SUNGLASSES_DETECTED: number;
+        SMALL_AGE: number;
+        HEADDRESS_DETECTED: number;
+        MEDICINE_MASK_DETECTED: number;
+        OCCLUSION_DETECTED: number;
+        FOREHEAD_GLASSES_DETECTED: number;
+        MOUTH_OPENED: number;
+        ART_MASK_DETECTED: number;
+        NOT_MATCHED: number;
         IMAGES_COUNT_LIMIT_EXCEEDED: number;
-        API_CALL_FAILED: number;
-        PROCESSING_FAILED: number;
+        ELECTRONIC_DEVICE_DETECTED: number;
+        WRONG_GEO: number;
+        WRONG_OF: number;
+        WRONG_VIEW: number;
+    };
+    DetectFacesAttribute: {
+        AGE: string;
+        EYE_RIGHT: string;
+        EYE_LEFT: string;
+        EMOTION: string;
+        SMILE: string;
+        GLASSES: string;
+        HEAD_COVERING: string;
+        FOREHEAD_COVERING: string;
+        MOUTH: string;
+        MEDICAL_MASK: string;
+        OCCLUSION: string;
+        STRONG_MAKEUP: string;
+        HEADPHONES: string;
     };
 };
 /**
@@ -238,7 +651,33 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
      *
      * @return {Promise<any>} Returns a promise
      */
+    init(): Promise<any>;
+    /**
+     *  description
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    deinit(): Promise<any>;
+    /**
+     *  description
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    isInitialized(): Promise<any>;
+    /**
+     *  description
+     *
+     * @return {Promise<any>} Returns a promise
+     */
     stopLivenessProcessing(): Promise<any>;
+    /**
+     *  sets headers for http request
+     *
+     * @param {map} headers key - header name
+     *  value - header value
+     * @return {Promise<any>} Returns a promise
+     */
+    setRequestHeaders(headers: any): Promise<any>;
     /**
      *  description
      *
@@ -280,6 +719,13 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     matchFaces(request: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {DetectFacesRequest} request description
+     * @return {Promise<any>} Returns a promise
+     */
+    detectFaces(request: any): Promise<any>;
     /**
      *  description
      *

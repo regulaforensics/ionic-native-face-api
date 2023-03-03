@@ -3,7 +3,7 @@ import { Plugin, Cordova, AwesomeCordovaNativePlugin } from '@awesome-cordova-pl
 import { Observable } from 'rxjs';
 
 export class FaceCaptureException {
-    errorCode?: number
+    errorCode?: string
     message?: string
 
     static fromJson(jsonObject?: any): FaceCaptureException | undefined {
@@ -18,12 +18,29 @@ export class FaceCaptureException {
 }
 
 export class LivenessErrorException {
-    errorCode?: number
+    errorCode?: string
+    underlyingException?: LivenessBackendException
     message?: string
 
     static fromJson(jsonObject?: any): LivenessErrorException | undefined {
         if (jsonObject == null || jsonObject == undefined) return undefined
         const result = new LivenessErrorException
+
+        result.errorCode = jsonObject["errorCode"]
+        result.underlyingException = LivenessBackendException.fromJson(jsonObject["underlyingException"])
+        result.message = jsonObject["message"]
+
+        return result
+    }
+}
+
+export class LivenessBackendException {
+    errorCode?: number
+    message?: string
+
+    static fromJson(jsonObject?: any): LivenessBackendException | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new LivenessBackendException
 
         result.errorCode = jsonObject["errorCode"]
         result.message = jsonObject["message"]
@@ -33,7 +50,7 @@ export class LivenessErrorException {
 }
 
 export class MatchFacesException {
-    errorCode?: number
+    errorCode?: string
     message?: string
 
     static fromJson(jsonObject?: any): MatchFacesException | undefined {
@@ -64,7 +81,7 @@ export class FaceCaptureResponse {
 
 export class LivenessResponse {
     bitmap?: string
-    liveness?: number
+    liveness?: string
     guid?: string
     exception?: LivenessErrorException
 
@@ -115,6 +132,8 @@ export class MatchFacesResponse {
 export class Image {
     imageType?: number
     bitmap?: string
+    tag?: string
+    imageData?: any[]
 
     static fromJson(jsonObject?: any): Image | undefined {
         if (jsonObject == null || jsonObject == undefined) return undefined
@@ -122,6 +141,13 @@ export class Image {
 
         result.imageType = jsonObject["imageType"]
         result.bitmap = jsonObject["bitmap"]
+        result.tag = jsonObject["tag"]
+        result.imageData = []
+        if (jsonObject["imageData"] != null) {
+            for (const i in jsonObject["imageData"]) {
+                result.imageData.push(jsonObject["imageData"][i])
+            }
+        }
 
         return result
     }
@@ -327,25 +353,404 @@ export class MatchFacesSimilarityThresholdSplit {
     }
 }
 
-export const CameraPosition = {
-    Back: 0,
-    Front: 1,
+export class DetectFacesRequest {
+    scenario?: string
+    image?: string
+    configuration?: DetectFacesConfiguration
+
+    static fromJson(jsonObject?: any): DetectFacesRequest | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new DetectFacesRequest
+
+        result.scenario = jsonObject["scenario"]
+        result.image = jsonObject["image"]
+        result.configuration = DetectFacesConfiguration.fromJson(jsonObject["configuration"])
+
+        return result
+    }
+}
+
+export class DetectFacesConfiguration {
+    attributes?: string[]
+    customQuality?: ImageQualityCharacteristic[]
+    outputImageParams?: OutputImageParams
+    onlyCentralFace?: boolean
+
+    static fromJson(jsonObject?: any): DetectFacesConfiguration | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new DetectFacesConfiguration
+
+        result.attributes = []
+        if (jsonObject["attributes"] != null) {
+            for (const i in jsonObject["attributes"]) {
+                result.attributes.push(jsonObject["attributes"][i])
+            }
+        }
+        result.customQuality = []
+        if (jsonObject["customQuality"] != null) {
+            for (const i in jsonObject["customQuality"]) {
+                const item = ImageQualityCharacteristic.fromJson(jsonObject["customQuality"][i])
+                if (item != undefined)
+                    result.customQuality.push(item)
+            }
+        }
+        result.outputImageParams = OutputImageParams.fromJson(jsonObject["outputImageParams"])
+        result.onlyCentralFace = jsonObject["onlyCentralFace"]
+
+        return result
+    }
+}
+
+export class OutputImageParams {
+    backgroundColor?: string
+    crop?: OutputImageCrop
+
+    static fromJson(jsonObject?: any): OutputImageParams | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new OutputImageParams
+
+        result.backgroundColor = jsonObject["backgroundColor"]
+        result.crop = OutputImageCrop.fromJson(jsonObject["crop"])
+
+        return result
+    }
+}
+
+export class OutputImageCrop {
+    type?: number
+    size?: Size
+    padColor?: string
+    returnOriginalRect?: boolean
+
+    static fromJson(jsonObject?: any): OutputImageCrop | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new OutputImageCrop
+
+        result.type = jsonObject["type"]
+        result.size = Size.fromJson(jsonObject["size"])
+        result.padColor = jsonObject["padColor"]
+        result.returnOriginalRect = jsonObject["returnOriginalRect"]
+
+        return result
+    }
+}
+
+export class ImageQualityCharacteristic {
+    characteristicName?: string
+    imageQualityGroup?: number
+    recommendedRange?: ImageQualityRange
+    customRange?: ImageQualityRange
+
+    static fromJson(jsonObject?: any): ImageQualityCharacteristic | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new ImageQualityCharacteristic
+
+        result.characteristicName = jsonObject["characteristicName"]
+        result.imageQualityGroup = jsonObject["imageQualityGroup"]
+        result.recommendedRange = ImageQualityRange.fromJson(jsonObject["recommendedRange"])
+        result.customRange = ImageQualityRange.fromJson(jsonObject["customRange"])
+
+        return result
+    }
+}
+
+export class ImageQualityRange {
+    min?: number
+    max?: number
+
+    static fromJson(jsonObject?: any): ImageQualityRange | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new ImageQualityRange
+
+        result.min = jsonObject["min"]
+        result.max = jsonObject["max"]
+
+        return result
+    }
+}
+
+export class Size {
+    width?: number
+    height?: number
+
+    static fromJson(jsonObject?: any): Size | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new Size
+
+        result.width = jsonObject["width"]
+        result.height = jsonObject["height"]
+
+        return result
+    }
+}
+
+export class DetectFacesResponse {
+    detection?: DetectFaceResult
+    scenario?: string
+    error?: DetectFacesErrorException
+    allDetections?: DetectFaceResult[]
+
+    static fromJson(jsonObject?: any): DetectFacesResponse | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new DetectFacesResponse
+
+        result.detection = DetectFaceResult.fromJson(jsonObject["detection"])
+        result.scenario = jsonObject["scenario"]
+        result.error = DetectFacesErrorException.fromJson(jsonObject["error"])
+        result.allDetections = []
+        if (jsonObject["allDetections"] != null) {
+            for (const i in jsonObject["allDetections"]) {
+                const item = DetectFaceResult.fromJson(jsonObject["allDetections"][i])
+                if (item != undefined)
+                    result.allDetections.push(item)
+            }
+        }
+
+        return result
+    }
+}
+
+export class DetectFacesErrorException {
+    errorCode?: string
+    underlyingException?: DetectFacesBackendException
+    message?: string
+
+    static fromJson(jsonObject?: any): DetectFacesErrorException | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new DetectFacesErrorException
+
+        result.errorCode = jsonObject["errorCode"]
+        result.underlyingException = DetectFacesBackendException.fromJson(jsonObject["underlyingException"])
+        result.message = jsonObject["message"]
+
+        return result
+    }
+}
+
+export class DetectFacesBackendException {
+    errorCode?: number
+    message?: string
+
+    static fromJson(jsonObject?: any): DetectFacesBackendException | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new DetectFacesBackendException
+
+        result.errorCode = jsonObject["errorCode"]
+        result.message = jsonObject["message"]
+
+        return result
+    }
+}
+
+export class DetectFaceResult {
+    quality?: ImageQualityResult[]
+    attributes?: DetectFacesAttributeResult[]
+    landmarks?: Point[]
+    crop?: string
+    faceRect?: Rect
+    originalRect?: Rect
+    isQualityCompliant?: boolean
+
+    static fromJson(jsonObject?: any): DetectFaceResult | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new DetectFaceResult
+
+        result.quality = []
+        if (jsonObject["quality"] != null) {
+            for (const i in jsonObject["quality"]) {
+                const item = ImageQualityResult.fromJson(jsonObject["quality"][i])
+                if (item != undefined)
+                    result.quality.push(item)
+            }
+        }
+        result.attributes = []
+        if (jsonObject["attributes"] != null) {
+            for (const i in jsonObject["attributes"]) {
+                const item = DetectFacesAttributeResult.fromJson(jsonObject["attributes"][i])
+                if (item != undefined)
+                    result.attributes.push(item)
+            }
+        }
+        result.landmarks = []
+        if (jsonObject["landmarks"] != null) {
+            for (const i in jsonObject["landmarks"]) {
+                const item = Point.fromJson(jsonObject["landmarks"][i])
+                if (item != undefined)
+                    result.landmarks.push(item)
+            }
+        }
+        result.crop = jsonObject["crop"]
+        result.faceRect = Rect.fromJson(jsonObject["faceRect"])
+        result.originalRect = Rect.fromJson(jsonObject["originalRect"])
+        result.isQualityCompliant = jsonObject["isQualityCompliant"]
+
+        return result
+    }
+}
+
+export class ImageQualityResult {
+    name?: string
+    group?: number
+    status?: number
+    range?: ImageQualityRange
+    value?: number
+
+    static fromJson(jsonObject?: any): ImageQualityResult | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new ImageQualityResult
+
+        result.name = jsonObject["name"]
+        result.group = jsonObject["group"]
+        result.status = jsonObject["status"]
+        result.range = ImageQualityRange.fromJson(jsonObject["range"])
+        result.value = jsonObject["value"]
+
+        return result
+    }
+}
+
+export class DetectFacesAttributeResult {
+    attribute?: string
+    value?: string
+    range?: ImageQualityRange
+    confidence?: number
+
+    static fromJson(jsonObject?: any): DetectFacesAttributeResult | undefined {
+        if (jsonObject == null || jsonObject == undefined) return undefined
+        const result = new DetectFacesAttributeResult
+
+        result.attribute = jsonObject["attribute"]
+        result.value = jsonObject["value"]
+        result.range = ImageQualityRange.fromJson(jsonObject["range"])
+        result.confidence = jsonObject["confidence"]
+
+        return result
+    }
+}
+
+export const ImageQualityGroupName = {
+    IMAGE_CHARACTERISTICS: 1,
+    HEAD_SIZE_AND_POSITION: 2,
+    FACE_QUALITY: 3,
+    EYES_CHARACTERISTICS: 4,
+    SHADOWS_AND_LIGHTNING: 5,
+    POSE_AND_EXPRESSION: 6,
+    HEAD_OCCLUSION: 7,
+    BACKGROUND: 8,
+    UNKNOWN: 9,
+}
+
+export const DetectFacesErrorCode = {
+    IMAGE_EMPTY: "IMAGE_EMPTY",
+    FR_FACE_NOT_DETECTED: "FR_FACE_NOT_DETECTED",
+    FACER_NO_LICENSE: "FACER_NO_LICENSE",
+    FACER_IS_NOT_INITIALIZED: "FACER_IS_NOT_INITIALIZED",
+    FACER_COMMAND_IS_NOT_SUPPORTED: "FACER_COMMAND_IS_NOT_SUPPORTED",
+    FACER_COMMAND_PARAMS_READ_ERROR: "FACER_COMMAND_PARAMS_READ_ERROR",
+    PROCESSING_FAILED: "PROCESSING_FAILED",
+    REQUEST_FAILED: "REQUEST_FAILED",
+    API_CALL_FAILED: "API_CALL_FAILED",
 }
 
 export const LivenessStatus = {
-    PASSED: 0,
-    UNKNOWN: 1,
+    PASSED: "PASSED",
+    UNKNOWN: "UNKNOWN",
 }
 
 export const LivenessErrorCode = {
-    CONTEXT_IS_NULL: 1,
-    IN_PROGRESS_ALREADY: 2,
-    ZOOM_NOT_SUPPORTED: 3,
-    NO_LICENSE: 4,
-    CANCELLED: 5,
-    PROCESSING_TIMEOUT: 6,
-    API_CALL_FAILED: 7,
-    PROCESSING_FAILED: 8,
+    CONTEXT_IS_NULL: "CONTEXT_IS_NULL",
+    IN_PROGRESS_ALREADY: "IN_PROGRESS_ALREADY",
+    ZOOM_NOT_SUPPORTED: "ZOOM_NOT_SUPPORTED",
+    NO_LICENSE: "NO_LICENSE",
+    CANCELLED: "CANCELLED",
+    PROCESSING_TIMEOUT: "PROCESSING_TIMEOUT",
+    API_CALL_FAILED: "API_CALL_FAILED",
+    PROCESSING_FAILED: "PROCESSING_FAILED",
+}
+
+export const DetectFacesBackendErrorCode = {
+    FR_FACE_NOT_DETECTED: 2,
+    FACER_NO_LICENSE: 200,
+    FACER_IS_NOT_INITIALIZED: 201,
+    FACER_COMMAND_IS_NOT_SUPPORTED: 202,
+    FACER_COMMAND_PARAMS_READ_ERROR: 203,
+    UNDEFINED: -1,
+}
+
+export const MatchFacesErrorCode = {
+    IMAGE_EMPTY: "IMAGE_EMPTY",
+    FACE_NOT_DETECTED: "FACE_NOT_DETECTED",
+    LANDMARKS_NOT_DETECTED: "LANDMARKS_NOT_DETECTED",
+    FACE_ALIGNER_FAILED: "FACE_ALIGNER_FAILED",
+    DESCRIPTOR_EXTRACTOR_ERROR: "DESCRIPTOR_EXTRACTOR_ERROR",
+    NO_LICENSE: "NO_LICENSE",
+    IMAGES_COUNT_LIMIT_EXCEEDED: "IMAGES_COUNT_LIMIT_EXCEEDED",
+    API_CALL_FAILED: "API_CALL_FAILED",
+    PROCESSING_FAILED: "PROCESSING_FAILED",
+}
+
+export const ImageQualityCharacteristicName = {
+    IMAGE_WIDTH: "ImageWidth",
+    IMAGE_HEIGHT: "ImageHeight",
+    IMAGE_WIDTH_TO_HEIGHT: "ImageWidthToHeight",
+    IMAGE_CHANNELS_NUMBER: "ImageChannelsNumber",
+    PADDING_RATIO: "PaddingRatio",
+    FACE_MID_POINT_HORIZONTAL_POSITION: "FaceMidPointHorizontalPosition",
+    FACE_MID_POINT_VERTICAL_POSITION: "FaceMidPointVerticalPosition",
+    HEAD_WIDTH_RATIO: "HeadWidthRatio",
+    HEAD_HEIGHT_RATIO: "HeadHeightRatio",
+    EYES_DISTANCE: "EyesDistance",
+    YAW: "Yaw",
+    PITCH: "Pitch",
+    ROLL: "Roll",
+    BLUR_LEVEL: "BlurLevel",
+    NOISE_LEVEL: "NoiseLevel",
+    UNNATURAL_SKIN_TONE: "UnnaturalSkinTone",
+    FACE_DYNAMIC_RANGE: "FaceDynamicRange",
+    EYE_RIGHT_CLOSED: "EyeRightClosed",
+    EYE_LEFT_CLOSED: "EyeLeftClosed",
+    EYE_RIGHT_OCCLUDED: "EyeRightOccluded",
+    EYE_LEFT_OCCLUDED: "EyeLeftOccluded",
+    EYES_RED: "EyesRed",
+    EYE_RIGHT_COVERED_WITH_HAIR: "EyeRightCoveredWithHair",
+    EYE_LEFT_COVERED_WITH_HAIR: "EyeLeftCoveredWithHair",
+    OFF_GAZE: "OffGaze",
+    TOO_DARK: "TooDark",
+    TOO_LIGHT: "TooLight",
+    FACE_GLARE: "FaceGlare",
+    SHADOWS_ON_FACE: "ShadowsOnFace",
+    SHOULDERS_POSE: "ShouldersPose",
+    EXPRESSION_LEVEL: "ExpressionLevel",
+    MOUTH_OPEN: "MouthOpen",
+    SMILE: "Smile",
+    DARK_GLASSES: "DarkGlasses",
+    REFLECTION_ON_GLASSES: "ReflectionOnGlasses",
+    FRAMES_TOO_HEAVY: "FramesTooHeavy",
+    FACE_OCCLUDED: "FaceOccluded",
+    HEAD_COVERING: "HeadCovering",
+    FOREHEAD_COVERING: "ForeheadCovering",
+    STRONG_MAKEUP: "StrongMakeup",
+    HEAD_PHONES: "Headphones",
+    MEDICAL_MASK: "MedicalMask",
+    BACKGROUND_UNIFORMITY: "BackgroundUniformity",
+    SHADOWS_ON_BACKGROUND: "ShadowsOnBackground",
+    OTHER_FACES: "OtherFaces",
+    BACKGROUND_COLOR_MATCH: "BackgroundColorMatch",
+    UNKNOWN: "Unknown",
+}
+
+export const OutputImageCropAspectRatio = {
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: 0,
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_4X5: 1,
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_2X3: 2,
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_1X1: 3,
+    OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: 4,
+}
+
+export const ImageQualityResultStatus = {
+    IMAGE_QUALITY_RESULT_STATUS_FALSE: 0,
+    IMAGE_QUALITY_RESULT_STATUS_TRUE: 1,
+    IMAGE_QUALITY_RESULT_STATUS_UNDETERMINED: 2,
 }
 
 export const ImageType = {
@@ -357,32 +762,67 @@ export const ImageType = {
 }
 
 export const FaceCaptureErrorCode = {
-    CANCEL: 1,
-    CAMERA_NOT_AVAILABLE: 2,
-    CAMERA_NO_PERMISSION: 3,
-    IN_PROGRESS_ALREADY: 4,
-    CONTEXT_IS_NULL: 5,
+    CANCEL: "CANCEL",
+    CAMERA_NOT_AVAILABLE: "CAMERA_NOT_AVAILABLE",
+    CAMERA_NO_PERMISSION: "CAMERA_NO_PERMISSION",
+    IN_PROGRESS_ALREADY: "IN_PROGRESS_ALREADY",
+    CONTEXT_IS_NULL: "CONTEXT_IS_NULL",
 }
 
-export const MatchFacesErrorCodes = {
-    IMAGE_EMPTY: 1,
-    FACE_NOT_DETECTED: 2,
-    LANDMARKS_NOT_DETECTED: 3,
-    FACE_ALIGNER_FAILED: 4,
-    DESCRIPTOR_EXTRACTOR_ERROR: 5,
-    NO_LICENSE: 6,
-    IMAGES_COUNT_LIMIT_EXCEEDED: 7,
-    API_CALL_FAILED: 8,
-    PROCESSING_FAILED: 9,
+export const LivenessBackendErrorCode = {
+    UNDEFINED: -1,
+    NO_LICENSE: 200,
+    LOW_QUALITY: 231,
+    HIGH_ASYMMETRY: 232,
+    TRACK_BREAK: 246,
+    CLOSED_EYES_DETECTED: 230,
+    FACE_OVER_EMOTIONAL: 233,
+    SUNGLASSES_DETECTED: 234,
+    SMALL_AGE: 235,
+    HEADDRESS_DETECTED: 236,
+    MEDICINE_MASK_DETECTED: 239,
+    OCCLUSION_DETECTED: 240,
+    FOREHEAD_GLASSES_DETECTED: 242,
+    MOUTH_OPENED: 243,
+    ART_MASK_DETECTED: 244,
+    NOT_MATCHED: 237,
+    IMAGES_COUNT_LIMIT_EXCEEDED: 238,
+    ELECTRONIC_DEVICE_DETECTED: 245,
+    WRONG_GEO: 247,
+    WRONG_OF: 248,
+    WRONG_VIEW: 249,
+}
+
+export const DetectFacesAttribute = {
+    AGE: "Age",
+    EYE_RIGHT: "EyeRight",
+    EYE_LEFT: "EyeLeft",
+    EMOTION: "Emotion",
+    SMILE: "Smile",
+    GLASSES: "Glasses",
+    HEAD_COVERING: "HeadCovering",
+    FOREHEAD_COVERING: "ForeheadCovering",
+    MOUTH: "Mouth",
+    MEDICAL_MASK: "MedicalMask",
+    OCCLUSION: "Occlusion",
+    STRONG_MAKEUP: "StrongMakeup",
+    HEADPHONES: "Headphones",
 }
 
 export const Enum = {
-   CameraPosition,
+   ImageQualityGroupName,
+   DetectFacesErrorCode,
    LivenessStatus,
    LivenessErrorCode,
+   DetectFacesBackendErrorCode,
+   MatchFacesErrorCode,
+   ImageQualityCharacteristicName,
+   OutputImageCropAspectRatio,
+   ImageQualityResultStatus,
    ImageType,
    FaceCaptureErrorCode,
-   MatchFacesErrorCodes,
+   LivenessBackendErrorCode,
+   DetectFacesAttribute,
 }
 
 /**
@@ -507,6 +947,15 @@ export class FaceSDK extends AwesomeCordovaNativePlugin {
      */
     @Cordova()
     matchFaces(request: any): Promise<any> { return }
+
+    /**
+     *  description
+     *
+     * @param {DetectFacesRequest} request description
+     * @return {Promise<any>} Returns a promise
+     */
+    @Cordova()
+    detectFaces(request: any): Promise<any> { return }
 
     /**
      *  description
