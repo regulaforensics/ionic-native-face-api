@@ -1,4 +1,5 @@
 import { AwesomeCordovaNativePlugin } from '@awesome-cordova-plugins/core';
+import { Observable } from 'rxjs';
 export declare class FaceCaptureException {
     errorCode?: string;
     message?: string;
@@ -33,12 +34,13 @@ export declare class FaceCaptureResponse {
 export declare class LivenessResponse {
     bitmap?: string;
     liveness?: string;
-    sessionId?: string;
+    tag?: string;
     transactionId?: string;
     exception?: LivenessErrorException;
     static fromJson(jsonObject?: any): LivenessResponse | undefined;
 }
 export declare class MatchFacesResponse {
+    tag?: string;
     exception?: MatchFacesException;
     detections?: MatchFacesDetection[];
     results?: MatchFacesComparedFacesPair[];
@@ -48,13 +50,14 @@ export declare class Image {
     imageType?: number;
     bitmap?: string;
     tag?: string;
-    imageData?: any[];
+    imageData?: string;
     static fromJson(jsonObject?: any): Image | undefined;
 }
 export declare class MatchFacesRequest {
     images?: MatchFacesImage[];
     customMetadata?: any;
     thumbnails?: boolean;
+    tag?: string;
     static fromJson(jsonObject?: any): MatchFacesRequest | undefined;
 }
 export declare class MatchFacesImage {
@@ -112,6 +115,7 @@ export declare class MatchFacesSimilarityThresholdSplit {
     static fromJson(jsonObject?: any): MatchFacesSimilarityThresholdSplit | undefined;
 }
 export declare class DetectFacesRequest {
+    tag?: string;
     scenario?: string;
     image?: string;
     configuration?: DetectFacesConfiguration;
@@ -195,6 +199,66 @@ export declare class DetectFacesAttributeResult {
     range?: ImageQualityRange;
     confidence?: number;
     static fromJson(jsonObject?: any): DetectFacesAttributeResult | undefined;
+}
+export declare class Person {
+    name?: string;
+    updatedAt?: string;
+    id?: number;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): Person | undefined;
+}
+export declare class PersonGroup {
+    name?: string;
+    id?: number;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): PersonGroup | undefined;
+}
+export declare class PersonImage {
+    path?: string;
+    url?: string;
+    contentType?: string;
+    id?: number;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): PersonImage | undefined;
+}
+export declare class ImageUpload {
+    imageData?: string;
+    static fromJson(jsonObject?: any): ImageUpload | undefined;
+}
+export declare class EditGroupPersonsRequest {
+    personIdsToAdd?: number[];
+    personIdsToRemove?: number[];
+    static fromJson(jsonObject?: any): EditGroupPersonsRequest | undefined;
+}
+export declare class SearchPersonRequest {
+    groupIdsForSearch?: number[];
+    threshold?: number;
+    limit?: number;
+    imageUpload?: ImageUpload;
+    static fromJson(jsonObject?: any): SearchPersonRequest | undefined;
+}
+export declare class SearchPerson {
+    images?: SearchPersonImage[];
+    name?: string;
+    updatedAt?: string;
+    id?: number;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): SearchPerson | undefined;
+}
+export declare class SearchPersonImage {
+    similarity?: number;
+    distance?: number;
+    path?: string;
+    url?: string;
+    contentType?: string;
+    id?: number;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): SearchPersonImage | undefined;
 }
 export declare const ImageQualityGroupName: {
     IMAGE_CHARACTERISTICS: number;
@@ -313,6 +377,14 @@ export declare const ImageQualityCharacteristicName: {
     OTHER_FACES: string;
     BACKGROUND_COLOR_MATCH: string;
     UNKNOWN: string;
+    IMAGE_CHARACTERISTIC_ALL_RECOMMENDED: string;
+    HEAD_SIZE_AND_POSITION_ALL_RECOMMENDED: string;
+    FACE_IMAGE_QUALITY_ALL_RECOMMENDED: string;
+    EYES_CHARACTERISTICS_ALL_RECOMMENDED: string;
+    SHADOW_AND_LIGHTING_ALL_RECOMMENDED: string;
+    POSE_AND_EXPRESSION_ALL_RECOMMENDED: string;
+    HEAD_OCCLUSION_ALL_RECOMMENDED: string;
+    QUALITY_BACKGROUND_ALL_RECOMMENDED: string;
 };
 export declare const DetectFacesScenario: {
     CROP_CENTRAL_FACE: string;
@@ -514,6 +586,14 @@ export declare const Enum: {
         OTHER_FACES: string;
         BACKGROUND_COLOR_MATCH: string;
         UNKNOWN: string;
+        IMAGE_CHARACTERISTIC_ALL_RECOMMENDED: string;
+        HEAD_SIZE_AND_POSITION_ALL_RECOMMENDED: string;
+        FACE_IMAGE_QUALITY_ALL_RECOMMENDED: string;
+        EYES_CHARACTERISTICS_ALL_RECOMMENDED: string;
+        SHADOW_AND_LIGHTING_ALL_RECOMMENDED: string;
+        POSE_AND_EXPRESSION_ALL_RECOMMENDED: string;
+        HEAD_OCCLUSION_ALL_RECOMMENDED: string;
+        QUALITY_BACKGROUND_ALL_RECOMMENDED: string;
     };
     DetectFacesScenario: {
         CROP_CENTRAL_FACE: string;
@@ -735,6 +815,20 @@ export declare class FaceSDK extends AwesomeCordovaNativePlugin {
      */
     matchFacesWithConfig(request: any, config: any): Promise<any>;
     /**
+     *  Use this method to set OnClickListener
+     *  for buttons from UICustomizationLayer
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    setOnCustomButtonTappedListener(): Observable<any>;
+    /**
+     *  Use this method to set UICustomizationLayer
+     *
+     * @param {object} json custom UI layer JSON
+     * @return {Promise<any>} Returns a promise
+     */
+    setUiCustomizationLayer(json: any): Promise<any>;
+    /**
      *  description
      *
      * @param {string} language description
@@ -750,4 +844,181 @@ export declare class FaceSDK extends AwesomeCordovaNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     matchFacesSimilarityThresholdSplit(faces: any, similarity: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersons(): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonsForPage(page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPerson(personId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} name description
+     * @param {object} metadata description
+     * @return {Promise<any>} Returns a promise
+     */
+    createPerson(name: any, metadata: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {int} personId description
+     * @param {string} name description
+     * @param {object} metadata description
+     * @return {Promise<any>} Returns a promise
+     */
+    updatePerson(personId: any, name: any, metadata: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @return {Promise<any>} Returns a promise
+     */
+    deletePerson(personId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonImages(personId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonImagesForPage(personId: any, page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @param {ImageUpload} image description
+     * @return {Promise<any>} Returns a promise
+     */
+    addPersonImage(personId: any, image: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @param {number} imageId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonImage(personId: any, imageId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @param {number} imageId description
+     * @return {Promise<any>} Returns a promise
+     */
+    deletePersonImage(personId: any, imageId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    getGroups(): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getGroupsForPage(page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonGroups(personId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} personId description
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonGroupsForPage(personId: any, page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} name description
+     * @param {object} metadata description
+     * @return {Promise<any>} Returns a promise
+     */
+    createGroup(name: any, metadata: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} groupId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getGroup(groupId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {int} groupId description
+     * @param {string} name description
+     * @param {object} metadata description
+     * @return {Promise<any>} Returns a promise
+     */
+    updateGroup(groupId: any, name: any, metadata: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} groupId description
+     * @param {EditGroupPersonsRequest} editGroupPersonsRequest description
+     * @return {Promise<any>} Returns a promise
+     */
+    editPersonsInGroup(groupId: any, editGroupPersonsRequest: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} groupId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonsInGroup(groupId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} groupId description
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonsInGroupForPage(groupId: any, page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} groupId description
+     * @return {Promise<any>} Returns a promise
+     */
+    deleteGroup(groupId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {SearchPersonRequest} searchPersonRequest description
+     * @return {Promise<any>} Returns a promise
+     */
+    searchPerson(searchPersonRequest: any): Promise<any>;
 }
