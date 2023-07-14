@@ -1,5 +1,4 @@
 import { AwesomeCordovaNativePlugin } from '@awesome-cordova-plugins/core';
-import { Observable } from 'rxjs';
 export declare class FaceCaptureException {
     errorCode?: string;
     message?: string;
@@ -997,13 +996,6 @@ export declare class FaceSDK extends AwesomeCordovaNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     detectFaces(request: any): Promise<any>;
-    /**
-     *  Use this method to set OnClickListener
-     *  for buttons from UICustomizationLayer
-     *
-     * @return {Promise<any>} Returns a promise
-     */
-    setOnCustomButtonTappedListener(): Observable<any>;
     /**
      *  Use this method to set UICustomizationLayer
      *
