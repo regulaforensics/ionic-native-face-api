@@ -33,12 +33,14 @@ export declare class FaceCaptureResponse {
 export declare class LivenessResponse {
     bitmap?: string;
     liveness?: string;
-    sessionId?: string;
+    tag?: string;
     transactionId?: string;
+    estimatedAge?: number;
     exception?: LivenessErrorException;
     static fromJson(jsonObject?: any): LivenessResponse | undefined;
 }
 export declare class MatchFacesResponse {
+    tag?: string;
     exception?: MatchFacesException;
     detections?: MatchFacesDetection[];
     results?: MatchFacesComparedFacesPair[];
@@ -48,13 +50,14 @@ export declare class Image {
     imageType?: number;
     bitmap?: string;
     tag?: string;
-    imageData?: any[];
+    imageData?: string;
     static fromJson(jsonObject?: any): Image | undefined;
 }
 export declare class MatchFacesRequest {
     images?: MatchFacesImage[];
     customMetadata?: any;
     thumbnails?: boolean;
+    tag?: string;
     static fromJson(jsonObject?: any): MatchFacesRequest | undefined;
 }
 export declare class MatchFacesImage {
@@ -112,6 +115,7 @@ export declare class MatchFacesSimilarityThresholdSplit {
     static fromJson(jsonObject?: any): MatchFacesSimilarityThresholdSplit | undefined;
 }
 export declare class DetectFacesRequest {
+    tag?: string;
     scenario?: string;
     image?: string;
     configuration?: DetectFacesConfiguration;
@@ -196,6 +200,126 @@ export declare class DetectFacesAttributeResult {
     confidence?: number;
     static fromJson(jsonObject?: any): DetectFacesAttributeResult | undefined;
 }
+export declare class Font {
+    name?: string;
+    style?: number;
+    size?: number;
+    static fromJson(jsonObject?: any): Font | undefined;
+}
+export declare class Person {
+    name?: string;
+    groups?: string[];
+    updatedAt?: string;
+    id?: string;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): Person | undefined;
+}
+export declare class PersonGroup {
+    name?: string;
+    id?: string;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): PersonGroup | undefined;
+}
+export declare class PersonImage {
+    path?: string;
+    url?: string;
+    contentType?: string;
+    id?: string;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): PersonImage | undefined;
+}
+export declare class ImageUpload {
+    imageData?: string;
+    static fromJson(jsonObject?: any): ImageUpload | undefined;
+}
+export declare class EditGroupPersonsRequest {
+    personIdsToAdd?: string[];
+    personIdsToRemove?: string[];
+    static fromJson(jsonObject?: any): EditGroupPersonsRequest | undefined;
+}
+export declare class SearchPersonRequest {
+    outputImageParams?: OutputImageParams;
+    groupIdsForSearch?: string[];
+    threshold?: number;
+    limit?: number;
+    imageUpload?: ImageUpload;
+    detectAll?: boolean;
+    static fromJson(jsonObject?: any): SearchPersonRequest | undefined;
+}
+export declare class SearchPerson {
+    detection?: SearchPersonDetection;
+    images?: SearchPersonImage[];
+    name?: string;
+    groups?: string[];
+    updatedAt?: string;
+    id?: string;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): SearchPerson | undefined;
+}
+export declare class SearchPersonImage {
+    similarity?: number;
+    distance?: number;
+    path?: string;
+    url?: string;
+    contentType?: string;
+    id?: string;
+    metadata?: any;
+    createdAt?: string;
+    static fromJson(jsonObject?: any): SearchPersonImage | undefined;
+}
+export declare class SearchPersonDetection {
+    landmarks?: Point[];
+    rect?: Rect;
+    cropImage?: string;
+    rotationAngle?: number;
+    static fromJson(jsonObject?: any): SearchPersonDetection | undefined;
+}
+export declare class LivenessNotification {
+    status?: string;
+    response?: LivenessResponse;
+    static fromJson(jsonObject?: any): LivenessNotification | undefined;
+}
+export declare class VideoEncoderCompletion {
+    success?: boolean;
+    transactionId?: string;
+    static fromJson(jsonObject?: any): VideoEncoderCompletion | undefined;
+}
+export declare const FontStyle: {
+    NORMAL: number;
+    BOLD: number;
+    ITALIC: number;
+    BOLD_ITALIC: number;
+};
+export declare const CustomizationColor: {
+    ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: string;
+    ONBOARDING_SCREEN_START_BUTTON_TITLE: string;
+    ONBOARDING_SCREEN_BACKGROUND: string;
+    ONBOARDING_SCREEN_TITLE_LABEL_TEXT: string;
+    ONBOARDING_SCREEN_MESSAGE_LABEL_TEXT: string;
+    CAMERA_SCREEN_STROKE_NORMAL: string;
+    CAMERA_SCREEN_STROKE_ACTIVE: string;
+    CAMERA_SCREEN_SECTOR_TARGET: string;
+    CAMERA_SCREEN_SECTOR_ACTIVE: string;
+    CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: string;
+    CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: string;
+    CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: string;
+    CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: string;
+    CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: string;
+    CAMERA_SCREEN_DARK_TOOLBAR_TINT: string;
+    RETRY_SCREEN_BACKGROUND: string;
+    RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: string;
+    RETRY_SCREEN_RETRY_BUTTON_TITLE: string;
+    RETRY_SCREEN_TITLE_LABEL_TEXT: string;
+    RETRY_SCREEN_HINT_LABELS_TEXT: string;
+    PROCESSING_SCREEN_BACKGROUND: string;
+    PROCESSING_SCREEN_PROGRESS: string;
+    PROCESSING_SCREEN_TITLE: string;
+    SUCCESS_SCREEN_BACKGROUND: string;
+};
 export declare const ImageQualityGroupName: {
     IMAGE_CHARACTERISTICS: number;
     HEAD_SIZE_AND_POSITION: number;
@@ -245,6 +369,7 @@ export declare const LivenessErrorCode: {
     CAMERA_NO_PERMISSION: string;
     CAMERA_NOT_AVAILABLE: string;
     PROCESSING_FRAME_FAILED: string;
+    SESSION_START_FAILED: string;
 };
 export declare const DetectFacesBackendErrorCode: {
     FR_FACE_NOT_DETECTED: number;
@@ -270,6 +395,7 @@ export declare const ImageQualityCharacteristicName: {
     IMAGE_HEIGHT: string;
     IMAGE_WIDTH_TO_HEIGHT: string;
     IMAGE_CHANNELS_NUMBER: string;
+    ART_FACE: string;
     PADDING_RATIO: string;
     FACE_MID_POINT_HORIZONTAL_POSITION: string;
     FACE_MID_POINT_VERTICAL_POSITION: string;
@@ -313,6 +439,29 @@ export declare const ImageQualityCharacteristicName: {
     OTHER_FACES: string;
     BACKGROUND_COLOR_MATCH: string;
     UNKNOWN: string;
+    IMAGE_CHARACTERISTIC_ALL_RECOMMENDED: string;
+    HEAD_SIZE_AND_POSITION_ALL_RECOMMENDED: string;
+    FACE_IMAGE_QUALITY_ALL_RECOMMENDED: string;
+    EYES_CHARACTERISTICS_ALL_RECOMMENDED: string;
+    SHADOW_AND_LIGHTING_ALL_RECOMMENDED: string;
+    POSE_AND_EXPRESSION_ALL_RECOMMENDED: string;
+    HEAD_OCCLUSION_ALL_RECOMMENDED: string;
+    QUALITY_BACKGROUND_ALL_RECOMMENDED: string;
+};
+export declare const ButtonTag: {
+    CLOSE: number;
+    TORCH: number;
+    CAMERA_SWITCH: number;
+};
+export declare const CustomizationFont: {
+    ONBOARDING_SCREEN_START_BUTTON: string;
+    ONBOARDING_SCREEN_TITLE_LABEL: string;
+    ONBOARDING_SCREEN_MESSAGE_LABEL: string;
+    CAMERA_SCREEN_HINT_LABEL: string;
+    RETRY_SCREEN_RETRY_BUTTON: string;
+    RETRY_SCREEN_TITLE_LABEL: string;
+    RETRY_SCREEN_HINT_LABELS: string;
+    PROCESSING_SCREEN: string;
 };
 export declare const DetectFacesScenario: {
     CROP_CENTRAL_FACE: string;
@@ -324,6 +473,23 @@ export declare const DetectFacesScenario: {
     QUALITY_VISA_SCHENGEN: string;
     QUALITY_VISA_USA: string;
 };
+export declare const LivenessProcessStatus: {
+    START: string;
+    PREPARING: string;
+    NEW_SESSION: string;
+    NEXT_STAGE: string;
+    SECTOR_CHANGED: string;
+    PROGRESS: string;
+    LOW_BRIGHTNESS: string;
+    FIT_FACE: string;
+    MOVE_AWAY: string;
+    MOVE_CLOSER: string;
+    TURN_HEAD: string;
+    PROCESSING: string;
+    FAILED: string;
+    RETRY: string;
+    SUCCESS: string;
+};
 export declare const OutputImageCropAspectRatio: {
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: number;
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_4X5: number;
@@ -332,9 +498,8 @@ export declare const OutputImageCropAspectRatio: {
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
 };
 export declare const LivenessSkipStep: {
-    NONE: number;
-    START_STEP: number;
-    DONE_STEP: number;
+    ONBOARDING_STEP: number;
+    SUCCESS_STEP: number;
 };
 export declare const ImageQualityResultStatus: {
     IMAGE_QUALITY_RESULT_STATUS_FALSE: number;
@@ -357,6 +522,7 @@ export declare const FaceCaptureErrorCode: {
     CONTEXT_IS_NULL: string;
     TIMEOUT: string;
     NOT_INITIALIZED: string;
+    SESSION_START_FAILED: string;
 };
 export declare const LivenessBackendErrorCode: {
     UNDEFINED: number;
@@ -381,6 +547,21 @@ export declare const LivenessBackendErrorCode: {
     WRONG_OF: number;
     WRONG_VIEW: number;
 };
+export declare const CustomizationImage: {
+    ONBOARDING_SCREEN_CLOSE_BUTTON: string;
+    ONBOARDING_SCREEN_ILLUMINATION: string;
+    ONBOARDING_SCREEN_ACCESSORIES: string;
+    ONBOARDING_SCREEN_CAMERA_LEVEL: string;
+    CAMERA_SCREEN_CLOSE_BUTTON: string;
+    CAMERA_SCREEN_LIGHT_ON_BUTTON: string;
+    CAMERA_SCREEN_LIGHT_OFF_BUTTON: string;
+    CAMERA_SCREEN_SWITCH_BUTTON: string;
+    RETRY_SCREEN_CLOSE_BUTTON: string;
+    RETRY_SCREEN_HINT_ENVIRONMENT: string;
+    RETRY_SCREEN_HINT_SUBJECT: string;
+    PROCESSING_SCREEN_CLOSE_BUTTON: string;
+    SUCCESS_SCREEN_IMAGE: string;
+};
 export declare const DetectFacesAttribute: {
     AGE: string;
     EYE_RIGHT: string;
@@ -397,6 +578,38 @@ export declare const DetectFacesAttribute: {
     HEADPHONES: string;
 };
 export declare const Enum: {
+    FontStyle: {
+        NORMAL: number;
+        BOLD: number;
+        ITALIC: number;
+        BOLD_ITALIC: number;
+    };
+    CustomizationColor: {
+        ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: string;
+        ONBOARDING_SCREEN_START_BUTTON_TITLE: string;
+        ONBOARDING_SCREEN_BACKGROUND: string;
+        ONBOARDING_SCREEN_TITLE_LABEL_TEXT: string;
+        ONBOARDING_SCREEN_MESSAGE_LABEL_TEXT: string;
+        CAMERA_SCREEN_STROKE_NORMAL: string;
+        CAMERA_SCREEN_STROKE_ACTIVE: string;
+        CAMERA_SCREEN_SECTOR_TARGET: string;
+        CAMERA_SCREEN_SECTOR_ACTIVE: string;
+        CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: string;
+        CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: string;
+        CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: string;
+        CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: string;
+        CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: string;
+        CAMERA_SCREEN_DARK_TOOLBAR_TINT: string;
+        RETRY_SCREEN_BACKGROUND: string;
+        RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: string;
+        RETRY_SCREEN_RETRY_BUTTON_TITLE: string;
+        RETRY_SCREEN_TITLE_LABEL_TEXT: string;
+        RETRY_SCREEN_HINT_LABELS_TEXT: string;
+        PROCESSING_SCREEN_BACKGROUND: string;
+        PROCESSING_SCREEN_PROGRESS: string;
+        PROCESSING_SCREEN_TITLE: string;
+        SUCCESS_SCREEN_BACKGROUND: string;
+    };
     ImageQualityGroupName: {
         IMAGE_CHARACTERISTICS: number;
         HEAD_SIZE_AND_POSITION: number;
@@ -446,6 +659,7 @@ export declare const Enum: {
         CAMERA_NO_PERMISSION: string;
         CAMERA_NOT_AVAILABLE: string;
         PROCESSING_FRAME_FAILED: string;
+        SESSION_START_FAILED: string;
     };
     DetectFacesBackendErrorCode: {
         FR_FACE_NOT_DETECTED: number;
@@ -471,6 +685,7 @@ export declare const Enum: {
         IMAGE_HEIGHT: string;
         IMAGE_WIDTH_TO_HEIGHT: string;
         IMAGE_CHANNELS_NUMBER: string;
+        ART_FACE: string;
         PADDING_RATIO: string;
         FACE_MID_POINT_HORIZONTAL_POSITION: string;
         FACE_MID_POINT_VERTICAL_POSITION: string;
@@ -514,6 +729,29 @@ export declare const Enum: {
         OTHER_FACES: string;
         BACKGROUND_COLOR_MATCH: string;
         UNKNOWN: string;
+        IMAGE_CHARACTERISTIC_ALL_RECOMMENDED: string;
+        HEAD_SIZE_AND_POSITION_ALL_RECOMMENDED: string;
+        FACE_IMAGE_QUALITY_ALL_RECOMMENDED: string;
+        EYES_CHARACTERISTICS_ALL_RECOMMENDED: string;
+        SHADOW_AND_LIGHTING_ALL_RECOMMENDED: string;
+        POSE_AND_EXPRESSION_ALL_RECOMMENDED: string;
+        HEAD_OCCLUSION_ALL_RECOMMENDED: string;
+        QUALITY_BACKGROUND_ALL_RECOMMENDED: string;
+    };
+    ButtonTag: {
+        CLOSE: number;
+        TORCH: number;
+        CAMERA_SWITCH: number;
+    };
+    CustomizationFont: {
+        ONBOARDING_SCREEN_START_BUTTON: string;
+        ONBOARDING_SCREEN_TITLE_LABEL: string;
+        ONBOARDING_SCREEN_MESSAGE_LABEL: string;
+        CAMERA_SCREEN_HINT_LABEL: string;
+        RETRY_SCREEN_RETRY_BUTTON: string;
+        RETRY_SCREEN_TITLE_LABEL: string;
+        RETRY_SCREEN_HINT_LABELS: string;
+        PROCESSING_SCREEN: string;
     };
     DetectFacesScenario: {
         CROP_CENTRAL_FACE: string;
@@ -525,6 +763,23 @@ export declare const Enum: {
         QUALITY_VISA_SCHENGEN: string;
         QUALITY_VISA_USA: string;
     };
+    LivenessProcessStatus: {
+        START: string;
+        PREPARING: string;
+        NEW_SESSION: string;
+        NEXT_STAGE: string;
+        SECTOR_CHANGED: string;
+        PROGRESS: string;
+        LOW_BRIGHTNESS: string;
+        FIT_FACE: string;
+        MOVE_AWAY: string;
+        MOVE_CLOSER: string;
+        TURN_HEAD: string;
+        PROCESSING: string;
+        FAILED: string;
+        RETRY: string;
+        SUCCESS: string;
+    };
     OutputImageCropAspectRatio: {
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: number;
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_4X5: number;
@@ -533,9 +788,8 @@ export declare const Enum: {
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
     };
     LivenessSkipStep: {
-        NONE: number;
-        START_STEP: number;
-        DONE_STEP: number;
+        ONBOARDING_STEP: number;
+        SUCCESS_STEP: number;
     };
     ImageQualityResultStatus: {
         IMAGE_QUALITY_RESULT_STATUS_FALSE: number;
@@ -558,6 +812,7 @@ export declare const Enum: {
         CONTEXT_IS_NULL: string;
         TIMEOUT: string;
         NOT_INITIALIZED: string;
+        SESSION_START_FAILED: string;
     };
     LivenessBackendErrorCode: {
         UNDEFINED: number;
@@ -581,6 +836,21 @@ export declare const Enum: {
         WRONG_GEO: number;
         WRONG_OF: number;
         WRONG_VIEW: number;
+    };
+    CustomizationImage: {
+        ONBOARDING_SCREEN_CLOSE_BUTTON: string;
+        ONBOARDING_SCREEN_ILLUMINATION: string;
+        ONBOARDING_SCREEN_ACCESSORIES: string;
+        ONBOARDING_SCREEN_CAMERA_LEVEL: string;
+        CAMERA_SCREEN_CLOSE_BUTTON: string;
+        CAMERA_SCREEN_LIGHT_ON_BUTTON: string;
+        CAMERA_SCREEN_LIGHT_OFF_BUTTON: string;
+        CAMERA_SCREEN_SWITCH_BUTTON: string;
+        RETRY_SCREEN_CLOSE_BUTTON: string;
+        RETRY_SCREEN_HINT_ENVIRONMENT: string;
+        RETRY_SCREEN_HINT_SUBJECT: string;
+        PROCESSING_SCREEN_CLOSE_BUTTON: string;
+        SUCCESS_SCREEN_IMAGE: string;
     };
     DetectFacesAttribute: {
         AGE: string;
@@ -727,13 +997,19 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
      */
     detectFaces(request: any): Promise<any>;
     /**
-     *  description
+     *  Use this method to set UICustomizationLayer
      *
-     * @param {MatchFacesRequest} request description
-     * @param {object} config boolean forceToUseHuaweiVision
+     * @param {object} json custom UI layer JSON
      * @return {Promise<any>} Returns a promise
      */
-    matchFacesWithConfig(request: any, config: any): Promise<any>;
+    setUiCustomizationLayer(json: any): Promise<any>;
+    /**
+     *  Use this method to set UiConfiguration
+     *
+     * @param {object} config UiConfiguration JSON
+     * @return {Promise<any>} Returns a promise
+     */
+    setUiConfiguration(config: any): Promise<any>;
     /**
      *  description
      *
@@ -750,6 +1026,166 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     matchFacesSimilarityThresholdSplit(faces: any, similarity: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPerson(personId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} name description
+     * @param {array} groupIds description
+     * @param {object} metadata description
+     * @return {Promise<any>} Returns a promise
+     */
+    createPerson(name: any, groupIds: any, metadata: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {Person} person description
+     * @return {Promise<any>} Returns a promise
+     */
+    updatePerson(person: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @return {Promise<any>} Returns a promise
+     */
+    deletePerson(personId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonImages(personId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonImagesForPage(personId: any, page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @param {ImageUpload} image description
+     * @return {Promise<any>} Returns a promise
+     */
+    addPersonImage(personId: any, image: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @param {string} imageId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonImage(personId: any, imageId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @param {string} imageId description
+     * @return {Promise<any>} Returns a promise
+     */
+    deletePersonImage(personId: any, imageId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    getGroups(): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getGroupsForPage(page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonGroups(personId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} personId description
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonGroupsForPage(personId: any, page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} name description
+     * @param {object} metadata description
+     * @return {Promise<any>} Returns a promise
+     */
+    createGroup(name: any, metadata: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} groupId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getGroup(groupId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {PersonGroup} group description
+     * @return {Promise<any>} Returns a promise
+     */
+    updateGroup(group: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} groupId description
+     * @param {EditGroupPersonsRequest} editGroupPersonsRequest description
+     * @return {Promise<any>} Returns a promise
+     */
+    editPersonsInGroup(groupId: any, editGroupPersonsRequest: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} groupId description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonsInGroup(groupId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} groupId description
+     * @param {number} page description
+     * @param {number} size description
+     * @return {Promise<any>} Returns a promise
+     */
+    getPersonsInGroupForPage(groupId: any, page: any, size: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {string} groupId description
+     * @return {Promise<any>} Returns a promise
+     */
+    deleteGroup(groupId: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {SearchPersonRequest} searchPersonRequest description
+     * @return {Promise<any>} Returns a promise
+     */
+    searchPerson(searchPersonRequest: any): Promise<any>;
 }
 
 export declare const FaceSDK: FaceSDKOriginal;
