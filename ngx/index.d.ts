@@ -1013,10 +1013,10 @@ export declare class FaceSDK extends AwesomeCordovaNativePlugin {
     /**
      *  description
      *
-     * @param {string} language description
+     * @param {object} dictionary description
      * @return {Promise<any>} Returns a promise
      */
-    setLanguage(language: any): Promise<any>;
+    setLocalizationDictionary(dictionary: any): Promise<any>;
     /**
      *  description
      *
