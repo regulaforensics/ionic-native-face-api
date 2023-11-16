@@ -51,6 +51,7 @@ export class HomePage {
     function liveness() {
       FaceSDK.startLiveness().then(result => {
         result = LivenessResponse.fromJson(JSON.parse(result))
+        if (result.bitmap == null) return
         image1.bitmap = result.bitmap
         image1.imageType = Enum.ImageType.LIVE
         app.img1.nativeElement.src = "data:image/png;base64," + result.bitmap
