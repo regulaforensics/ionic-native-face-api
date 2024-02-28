@@ -1,10 +1,9 @@
 import { Component, ViewChild, ElementRef } from '@angular/core'
-import { File } from '@awesome-cordova-plugins/file'
-import { ImagePicker } from '@awesome-cordova-plugins/image-picker/ngx'
 import { Dialogs } from '@awesome-cordova-plugins/dialogs/ngx'
-import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx'
+import { File } from '@awesome-cordova-plugins/file'
+import { Camera, DestinationType, MediaType, PictureSourceType } from '@awesome-cordova-plugins/camera/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK, MatchFacesSimilarityThresholdSplit } from '@regulaforensics/ionic-native-face-api-beta/ngx'
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK, MatchFacesSimilarityThresholdSplit, InitializationConfiguration } from '@regulaforensics/ionic-native-face-api-beta/ngx'
 
 var image1 = new MatchFacesImage()
 var image2 = new MatchFacesImage()
@@ -23,7 +22,7 @@ export class HomePage {
   @ViewChild('similarityResult', { static: true }) similarityResult: ElementRef
   @ViewChild('livenessResult', { static: true }) livenessResult: ElementRef
 
-  constructor(public FaceSDK: FaceSDK, public platform: Platform, private imagePicker: ImagePicker, private dialogs: Dialogs, private androidPermissions: AndroidPermissions) {
+  constructor(public FaceSDK: FaceSDK, public platform: Platform, private dialogs: Dialogs, private camera: Camera) {
   }
 
   ionViewDidEnter() {
@@ -35,21 +34,34 @@ export class HomePage {
     app.matchFacesButton.nativeElement.addEventListener("click", matchFaces)
     app.livenessButton.nativeElement.addEventListener("click", liveness)
     app.clearResultsButton.nativeElement.addEventListener("click", clearResults)
-    
+
+    var onInit = (json: any) => {
+      var response = JSON.stringify(json)
+      if (response["success"] == false) {
+        console.log("Init failed: ");
+        console.log(json);
+      } else {
+        console.log("Init complete")
+      }
+    }
+
     app.platform.ready().then(() => {
-      FaceSDK.init().then(json => {
-        var response = JSON.stringify(json)
-        if (response["success"] == false) {
-          console.log("Init failed: ");
-          console.log(json);
-        } else {
-          console.log("Init complete")
+      File.resolveDirectoryUrl(File.applicationDirectory + "www/assets").then(dir => File.getFile(dir, "regula.license", null).then(fileEntry => fileEntry.file(file => {
+        var reader = new FileReader()
+        reader.onloadend = (_) => {
+          var license = reader.result as String
+          var config = new InitializationConfiguration()
+          config.license = license.substring(license.indexOf(',') + 1)
+          FaceSDK.initializeWithConfig(config).then(onInit)
         }
-      })
+        reader.readAsDataURL(file)
+      })).catch(_ => {
+        FaceSDK.initialize().then(onInit)
+      }))
     })
 
     function liveness() {
-      FaceSDK.startLiveness().then(result => {
+      FaceSDK.startLiveness().then((result: any) => {
         result = LivenessResponse.fromJson(JSON.parse(result))
         if (result.bitmap == null) return
         image1.bitmap = result.bitmap
@@ -65,9 +77,9 @@ export class HomePage {
       app.similarityResult.nativeElement.innerHTML = "Processing..."
       var request = new MatchFacesRequest()
       request.images = [image1, image2]
-      FaceSDK.matchFaces(JSON.stringify(request)).then(response => {
+      FaceSDK.matchFaces(JSON.stringify(request)).then((response: any) => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
-        FaceSDK.matchFacesSimilarityThresholdSplit(JSON.stringify(response.results), 0.75).then(str => {
+        FaceSDK.matchFacesSimilarityThresholdSplit(JSON.stringify(response.results), 0.75).then((str: any) => {
           var split = MatchFacesSimilarityThresholdSplit.fromJson(JSON.parse(str))
           app.similarityResult.nativeElement.innerHTML = split.matchedFaces.length > 0 ? ((split.matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
         })
@@ -84,14 +96,18 @@ export class HomePage {
     }
 
     function pickImage(first: boolean) {
-      app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button) => {
+      app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button: number) => {
         if (button == 1)
-        FaceSDK.presentFaceCaptureActivity().then(result => setImage(first, FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap, Enum.ImageType.LIVE))
-        else if (button == 2)
-          if (app.platform.is("android"))
-            useGalleryAndroid(first)
-          else if (app.platform.is("ios"))
-            useGallery(first)
+          FaceSDK.presentFaceCaptureActivity().then((result: any) => setImage(
+            first,
+            FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap,
+            Enum.ImageType.LIVE
+          ))
+        else app.camera.getPicture({
+          destinationType: DestinationType.DATA_URL,
+          mediaType: MediaType.PICTURE,
+          sourceType: PictureSourceType.PHOTOLIBRARY
+        }).then((result: string) => setImage(first, result, Enum.ImageType.PRINTED))
       })
     }
 
@@ -109,32 +125,6 @@ export class HomePage {
         image2.imageType = type
         app.img2.nativeElement.src = "data:image/png;base64," + base64
       }
-    }
-
-    function useGallery(first: boolean) {
-      app.imagePicker.getPictures({ maximumImagesCount: 1 }).then((results) => {
-        if (results.length == 0) {
-        }
-        File.readAsDataURL(
-          (app.platform.is("ios") ? "file://" : "") + results[0].substring(0, (results[0] as string).lastIndexOf("/")),
-          results[0].substring((results[0] as string).lastIndexOf("/") + 1)).then(
-            (file => setImage(first, (file as string).substring(23), Enum.ImageType.PRINTED))
-          )
-      })
-    }
-
-    function useGalleryAndroid(first: boolean) {
-      app.androidPermissions.checkPermission(app.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(result => {
-        if (result.hasPermission)
-          useGallery(first)
-        else
-          app.androidPermissions.requestPermission(app.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(result => {
-            if (result.hasPermission)
-              useGallery(first)
-            else
-              console.log("storage permission denied")
-          }, err => console.log(JSON.stringify(err)))
-      }, err => console.log(JSON.stringify(err)))
     }
   }
 }
