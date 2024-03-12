@@ -1,16 +1,22 @@
 import { AwesomeCordovaNativePlugin } from '@awesome-cordova-plugins/core';
 export declare class FaceCaptureException {
-    errorCode?: string;
+    errorCode?: number;
     message?: string;
     static fromJson(jsonObject?: any): FaceCaptureException | undefined;
 }
 export declare class InitException {
-    errorCode?: string;
+    errorCode?: number;
+    underlyingException?: LicenseException;
     message?: string;
     static fromJson(jsonObject?: any): InitException | undefined;
 }
+export declare class LicenseException {
+    errorCode?: number;
+    message?: string;
+    static fromJson(jsonObject?: any): LicenseException | undefined;
+}
 export declare class LivenessErrorException {
-    errorCode?: string;
+    errorCode?: number;
     underlyingException?: LivenessBackendException;
     message?: string;
     static fromJson(jsonObject?: any): LivenessErrorException | undefined;
@@ -21,9 +27,21 @@ export declare class LivenessBackendException {
     static fromJson(jsonObject?: any): LivenessBackendException | undefined;
 }
 export declare class MatchFacesException {
-    errorCode?: string;
+    errorCode?: number;
     message?: string;
+    detailedErrorMessage?: string;
     static fromJson(jsonObject?: any): MatchFacesException | undefined;
+}
+export declare class DetectFacesErrorException {
+    errorCode?: number;
+    underlyingException?: DetectFacesBackendException;
+    message?: string;
+    static fromJson(jsonObject?: any): DetectFacesErrorException | undefined;
+}
+export declare class DetectFacesBackendException {
+    errorCode?: number;
+    message?: string;
+    static fromJson(jsonObject?: any): DetectFacesBackendException | undefined;
 }
 export declare class FaceCaptureResponse {
     exception?: FaceCaptureException;
@@ -56,8 +74,8 @@ export declare class Image {
 export declare class MatchFacesRequest {
     images?: MatchFacesImage[];
     customMetadata?: any;
-    thumbnails?: boolean;
     tag?: string;
+    outputImageParams?: OutputImageParams;
     static fromJson(jsonObject?: any): MatchFacesRequest | undefined;
 }
 export declare class MatchFacesImage {
@@ -84,10 +102,11 @@ export declare class MatchFacesComparedFace {
 }
 export declare class MatchFacesDetectionFace {
     faceIndex?: number;
+    rotationAngle?: number;
     landmarks?: Point[];
     faceRect?: Rect;
-    rotationAngle?: number;
-    thumbnail?: string;
+    originalRect?: Rect;
+    crop?: string;
     static fromJson(jsonObject?: any): MatchFacesDetectionFace | undefined;
 }
 export declare class MatchFacesDetection {
@@ -164,17 +183,6 @@ export declare class DetectFacesResponse {
     allDetections?: DetectFaceResult[];
     static fromJson(jsonObject?: any): DetectFacesResponse | undefined;
 }
-export declare class DetectFacesErrorException {
-    errorCode?: string;
-    underlyingException?: DetectFacesBackendException;
-    message?: string;
-    static fromJson(jsonObject?: any): DetectFacesErrorException | undefined;
-}
-export declare class DetectFacesBackendException {
-    errorCode?: number;
-    message?: string;
-    static fromJson(jsonObject?: any): DetectFacesBackendException | undefined;
-}
 export declare class DetectFaceResult {
     quality?: ImageQualityResult[];
     attributes?: DetectFacesAttributeResult[];
@@ -233,6 +241,7 @@ export declare class PersonImage {
 }
 export declare class ImageUpload {
     imageData?: string;
+    imageUrl?: string;
     static fromJson(jsonObject?: any): ImageUpload | undefined;
 }
 export declare class EditGroupPersonsRequest {
@@ -288,6 +297,16 @@ export declare class VideoEncoderCompletion {
     transactionId?: string;
     static fromJson(jsonObject?: any): VideoEncoderCompletion | undefined;
 }
+export declare class InitializationConfiguration {
+    license?: string;
+    licenseUpdate?: boolean;
+    static fromJson(jsonObject?: any): InitializationConfiguration | undefined;
+}
+export declare class InitResponse {
+    success?: boolean;
+    error?: InitException;
+    static fromJson(jsonObject?: any): InitResponse | undefined;
+}
 export declare const FontStyle: {
     NORMAL: number;
     BOLD: number;
@@ -299,7 +318,8 @@ export declare const CustomizationColor: {
     ONBOARDING_SCREEN_START_BUTTON_TITLE: string;
     ONBOARDING_SCREEN_BACKGROUND: string;
     ONBOARDING_SCREEN_TITLE_LABEL_TEXT: string;
-    ONBOARDING_SCREEN_MESSAGE_LABEL_TEXT: string;
+    ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: string;
+    ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: string;
     CAMERA_SCREEN_STROKE_NORMAL: string;
     CAMERA_SCREEN_STROKE_ACTIVE: string;
     CAMERA_SCREEN_SECTOR_TARGET: string;
@@ -314,6 +334,7 @@ export declare const CustomizationColor: {
     RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: string;
     RETRY_SCREEN_RETRY_BUTTON_TITLE: string;
     RETRY_SCREEN_TITLE_LABEL_TEXT: string;
+    RETRY_SCREEN_SUBTITLE_LABEL_TEXT: string;
     RETRY_SCREEN_HINT_LABELS_TEXT: string;
     PROCESSING_SCREEN_BACKGROUND: string;
     PROCESSING_SCREEN_PROGRESS: string;
@@ -331,22 +352,40 @@ export declare const ImageQualityGroupName: {
     BACKGROUND: number;
     UNKNOWN: number;
 };
+export declare const LicensingResultCode: {
+    OK: number;
+    LICENSE_CORRUPTED: number;
+    INVALID_DATE: number;
+    INVALID_VERSION: number;
+    INVALID_DEVICE_ID: number;
+    INVALID_SYSTEM_OR_APP_ID: number;
+    NO_CAPABILITIES: number;
+    NO_AUTHENTICITY: number;
+    LICENSE_ABSENT: number;
+    NO_INTERNET: number;
+    NO_DATABASE: number;
+    DATABASE_INCORRECT: number;
+};
 export declare const DetectFacesErrorCode: {
-    IMAGE_EMPTY: string;
-    FR_FACE_NOT_DETECTED: string;
-    FACER_NO_LICENSE: string;
-    FACER_IS_NOT_INITIALIZED: string;
-    FACER_COMMAND_IS_NOT_SUPPORTED: string;
-    FACER_COMMAND_PARAMS_READ_ERROR: string;
-    PROCESSING_FAILED: string;
-    REQUEST_FAILED: string;
-    API_CALL_FAILED: string;
+    IMAGE_EMPTY: number;
+    FR_FACE_NOT_DETECTED: number;
+    FACER_NO_LICENSE: number;
+    FACER_IS_NOT_INITIALIZED: number;
+    FACER_COMMAND_IS_NOT_SUPPORTED: number;
+    FACER_COMMAND_PARAMS_READ_ERROR: number;
+    PROCESSING_FAILED: number;
+    REQUEST_FAILED: number;
+    API_CALL_FAILED: number;
 };
 export declare const InitErrorCode: {
-    IN_PROGRESS_ALREADY: string;
-    CONTEXT_IS_NULL: string;
-    MISSING_CORE: string;
-    INTERNAL_CORE_ERROR: string;
+    IN_PROGRESS_ALREADY: number;
+    MISSING_CORE: number;
+    INTERNAL_CORE_ERROR: number;
+    BAD_LICENSE: number;
+    UNAVAILABLE: number;
+    CONTEXT_IS_NULL: number;
+    RESOURCE_DAT_ABSENT: number;
+    LICENSE_IS_NULL: number;
 };
 export declare const LivenessStatus: {
     PASSED: string;
@@ -357,19 +396,25 @@ export declare const CameraErrorCode: {
     CAMERA_NO_PERMISSION: string;
 };
 export declare const LivenessErrorCode: {
-    CONTEXT_IS_NULL: string;
-    IN_PROGRESS_ALREADY: string;
-    ZOOM_NOT_SUPPORTED: string;
-    NO_LICENSE: string;
-    CANCELLED: string;
-    PROCESSING_TIMEOUT: string;
-    API_CALL_FAILED: string;
-    PROCESSING_FAILED: string;
-    NOT_INITIALIZED: string;
-    CAMERA_NO_PERMISSION: string;
-    CAMERA_NOT_AVAILABLE: string;
-    PROCESSING_FRAME_FAILED: string;
-    SESSION_START_FAILED: string;
+    NOT_INITIALIZED: number;
+    NO_LICENSE: number;
+    API_CALL_FAILED: number;
+    SESSION_START_FAILED: number;
+    CANCELLED: number;
+    PROCESSING_TIMEOUT: number;
+    PROCESSING_FAILED: number;
+    PROCESSING_FRAME_FAILED: number;
+    APPLICATION_INACTIVE: number;
+    CONTEXT_IS_NULL: number;
+    IN_PROGRESS_ALREADY: number;
+    ZOOM_NOT_SUPPORTED: number;
+    CAMERA_NO_PERMISSION: number;
+    CAMERA_NOT_AVAILABLE: number;
+};
+export declare const RecordingProcess: {
+    ASYNCHRONOUS_UPLOAD: string;
+    SYNCHRONOUS_UPLOAD: string;
+    NOT_UPLOAD: string;
 };
 export declare const DetectFacesBackendErrorCode: {
     FR_FACE_NOT_DETECTED: number;
@@ -380,15 +425,15 @@ export declare const DetectFacesBackendErrorCode: {
     UNDEFINED: number;
 };
 export declare const MatchFacesErrorCode: {
-    IMAGE_EMPTY: string;
-    FACE_NOT_DETECTED: string;
-    LANDMARKS_NOT_DETECTED: string;
-    FACE_ALIGNER_FAILED: string;
-    DESCRIPTOR_EXTRACTOR_ERROR: string;
-    NO_LICENSE: string;
-    IMAGES_COUNT_LIMIT_EXCEEDED: string;
-    API_CALL_FAILED: string;
-    PROCESSING_FAILED: string;
+    IMAGE_EMPTY: number;
+    FACE_NOT_DETECTED: number;
+    LANDMARKS_NOT_DETECTED: number;
+    FACE_ALIGNER_FAILED: number;
+    DESCRIPTOR_EXTRACTOR_ERROR: number;
+    IMAGES_COUNT_LIMIT_EXCEEDED: number;
+    API_CALL_FAILED: number;
+    PROCESSING_FAILED: number;
+    NO_LICENSE: number;
 };
 export declare const ImageQualityCharacteristicName: {
     IMAGE_WIDTH: string;
@@ -448,6 +493,10 @@ export declare const ImageQualityCharacteristicName: {
     HEAD_OCCLUSION_ALL_RECOMMENDED: string;
     QUALITY_BACKGROUND_ALL_RECOMMENDED: string;
 };
+export declare const ScreenOrientation: {
+    PORTRAIT: number;
+    LANDSCAPE: number;
+};
 export declare const ButtonTag: {
     CLOSE: number;
     TORCH: number;
@@ -456,10 +505,12 @@ export declare const ButtonTag: {
 export declare const CustomizationFont: {
     ONBOARDING_SCREEN_START_BUTTON: string;
     ONBOARDING_SCREEN_TITLE_LABEL: string;
-    ONBOARDING_SCREEN_MESSAGE_LABEL: string;
+    ONBOARDING_SCREEN_SUBTITLE_LABEL: string;
+    ONBOARDING_SCREEN_MESSAGE_LABELS: string;
     CAMERA_SCREEN_HINT_LABEL: string;
     RETRY_SCREEN_RETRY_BUTTON: string;
     RETRY_SCREEN_TITLE_LABEL: string;
+    RETRY_SCREEN_SUBTITLE_LABEL: string;
     RETRY_SCREEN_HINT_LABELS: string;
     PROCESSING_SCREEN: string;
 };
@@ -497,6 +548,10 @@ export declare const OutputImageCropAspectRatio: {
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_1X1: number;
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
 };
+export declare const LivenessType: {
+    ACTIVE: string;
+    PASSIVE: string;
+};
 export declare const LivenessSkipStep: {
     ONBOARDING_STEP: number;
     SUCCESS_STEP: number;
@@ -513,24 +568,25 @@ export declare const ImageType: {
     DOCUMENT_WITH_LIVE: number;
     EXTERNAL: number;
     GHOST_PORTRAIT: number;
+    BARCODE: number;
 };
 export declare const FaceCaptureErrorCode: {
-    CANCEL: string;
-    CAMERA_NOT_AVAILABLE: string;
-    CAMERA_NO_PERMISSION: string;
-    IN_PROGRESS_ALREADY: string;
-    CONTEXT_IS_NULL: string;
-    TIMEOUT: string;
-    NOT_INITIALIZED: string;
-    SESSION_START_FAILED: string;
+    CANCEL: number;
+    TIMEOUT: number;
+    NOT_INITIALIZED: number;
+    SESSION_START_FAILED: number;
+    CAMERA_NOT_AVAILABLE: number;
+    CAMERA_NO_PERMISSION: number;
+    IN_PROGRESS_ALREADY: number;
+    CONTEXT_IS_NULL: number;
 };
 export declare const LivenessBackendErrorCode: {
     UNDEFINED: number;
     NO_LICENSE: number;
     LOW_QUALITY: number;
-    HIGH_ASYMMETRY: number;
     TRACK_BREAK: number;
     CLOSED_EYES_DETECTED: number;
+    HIGH_ASYMMETRY: number;
     FACE_OVER_EMOTIONAL: number;
     SUNGLASSES_DETECTED: number;
     SMALL_AGE: number;
@@ -546,6 +602,10 @@ export declare const LivenessBackendErrorCode: {
     WRONG_GEO: number;
     WRONG_OF: number;
     WRONG_VIEW: number;
+};
+export declare const ProcessingMode: {
+    ONLINE: string;
+    OFFLINE: string;
 };
 export declare const CustomizationImage: {
     ONBOARDING_SCREEN_CLOSE_BUTTON: string;
@@ -589,7 +649,8 @@ export declare const Enum: {
         ONBOARDING_SCREEN_START_BUTTON_TITLE: string;
         ONBOARDING_SCREEN_BACKGROUND: string;
         ONBOARDING_SCREEN_TITLE_LABEL_TEXT: string;
-        ONBOARDING_SCREEN_MESSAGE_LABEL_TEXT: string;
+        ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: string;
+        ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: string;
         CAMERA_SCREEN_STROKE_NORMAL: string;
         CAMERA_SCREEN_STROKE_ACTIVE: string;
         CAMERA_SCREEN_SECTOR_TARGET: string;
@@ -604,6 +665,7 @@ export declare const Enum: {
         RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: string;
         RETRY_SCREEN_RETRY_BUTTON_TITLE: string;
         RETRY_SCREEN_TITLE_LABEL_TEXT: string;
+        RETRY_SCREEN_SUBTITLE_LABEL_TEXT: string;
         RETRY_SCREEN_HINT_LABELS_TEXT: string;
         PROCESSING_SCREEN_BACKGROUND: string;
         PROCESSING_SCREEN_PROGRESS: string;
@@ -621,22 +683,40 @@ export declare const Enum: {
         BACKGROUND: number;
         UNKNOWN: number;
     };
+    LicensingResultCode: {
+        OK: number;
+        LICENSE_CORRUPTED: number;
+        INVALID_DATE: number;
+        INVALID_VERSION: number;
+        INVALID_DEVICE_ID: number;
+        INVALID_SYSTEM_OR_APP_ID: number;
+        NO_CAPABILITIES: number;
+        NO_AUTHENTICITY: number;
+        LICENSE_ABSENT: number;
+        NO_INTERNET: number;
+        NO_DATABASE: number;
+        DATABASE_INCORRECT: number;
+    };
     DetectFacesErrorCode: {
-        IMAGE_EMPTY: string;
-        FR_FACE_NOT_DETECTED: string;
-        FACER_NO_LICENSE: string;
-        FACER_IS_NOT_INITIALIZED: string;
-        FACER_COMMAND_IS_NOT_SUPPORTED: string;
-        FACER_COMMAND_PARAMS_READ_ERROR: string;
-        PROCESSING_FAILED: string;
-        REQUEST_FAILED: string;
-        API_CALL_FAILED: string;
+        IMAGE_EMPTY: number;
+        FR_FACE_NOT_DETECTED: number;
+        FACER_NO_LICENSE: number;
+        FACER_IS_NOT_INITIALIZED: number;
+        FACER_COMMAND_IS_NOT_SUPPORTED: number;
+        FACER_COMMAND_PARAMS_READ_ERROR: number;
+        PROCESSING_FAILED: number;
+        REQUEST_FAILED: number;
+        API_CALL_FAILED: number;
     };
     InitErrorCode: {
-        IN_PROGRESS_ALREADY: string;
-        CONTEXT_IS_NULL: string;
-        MISSING_CORE: string;
-        INTERNAL_CORE_ERROR: string;
+        IN_PROGRESS_ALREADY: number;
+        MISSING_CORE: number;
+        INTERNAL_CORE_ERROR: number;
+        BAD_LICENSE: number;
+        UNAVAILABLE: number;
+        CONTEXT_IS_NULL: number;
+        RESOURCE_DAT_ABSENT: number;
+        LICENSE_IS_NULL: number;
     };
     LivenessStatus: {
         PASSED: string;
@@ -647,19 +727,25 @@ export declare const Enum: {
         CAMERA_NO_PERMISSION: string;
     };
     LivenessErrorCode: {
-        CONTEXT_IS_NULL: string;
-        IN_PROGRESS_ALREADY: string;
-        ZOOM_NOT_SUPPORTED: string;
-        NO_LICENSE: string;
-        CANCELLED: string;
-        PROCESSING_TIMEOUT: string;
-        API_CALL_FAILED: string;
-        PROCESSING_FAILED: string;
-        NOT_INITIALIZED: string;
-        CAMERA_NO_PERMISSION: string;
-        CAMERA_NOT_AVAILABLE: string;
-        PROCESSING_FRAME_FAILED: string;
-        SESSION_START_FAILED: string;
+        NOT_INITIALIZED: number;
+        NO_LICENSE: number;
+        API_CALL_FAILED: number;
+        SESSION_START_FAILED: number;
+        CANCELLED: number;
+        PROCESSING_TIMEOUT: number;
+        PROCESSING_FAILED: number;
+        PROCESSING_FRAME_FAILED: number;
+        APPLICATION_INACTIVE: number;
+        CONTEXT_IS_NULL: number;
+        IN_PROGRESS_ALREADY: number;
+        ZOOM_NOT_SUPPORTED: number;
+        CAMERA_NO_PERMISSION: number;
+        CAMERA_NOT_AVAILABLE: number;
+    };
+    RecordingProcess: {
+        ASYNCHRONOUS_UPLOAD: string;
+        SYNCHRONOUS_UPLOAD: string;
+        NOT_UPLOAD: string;
     };
     DetectFacesBackendErrorCode: {
         FR_FACE_NOT_DETECTED: number;
@@ -670,15 +756,15 @@ export declare const Enum: {
         UNDEFINED: number;
     };
     MatchFacesErrorCode: {
-        IMAGE_EMPTY: string;
-        FACE_NOT_DETECTED: string;
-        LANDMARKS_NOT_DETECTED: string;
-        FACE_ALIGNER_FAILED: string;
-        DESCRIPTOR_EXTRACTOR_ERROR: string;
-        NO_LICENSE: string;
-        IMAGES_COUNT_LIMIT_EXCEEDED: string;
-        API_CALL_FAILED: string;
-        PROCESSING_FAILED: string;
+        IMAGE_EMPTY: number;
+        FACE_NOT_DETECTED: number;
+        LANDMARKS_NOT_DETECTED: number;
+        FACE_ALIGNER_FAILED: number;
+        DESCRIPTOR_EXTRACTOR_ERROR: number;
+        IMAGES_COUNT_LIMIT_EXCEEDED: number;
+        API_CALL_FAILED: number;
+        PROCESSING_FAILED: number;
+        NO_LICENSE: number;
     };
     ImageQualityCharacteristicName: {
         IMAGE_WIDTH: string;
@@ -738,6 +824,10 @@ export declare const Enum: {
         HEAD_OCCLUSION_ALL_RECOMMENDED: string;
         QUALITY_BACKGROUND_ALL_RECOMMENDED: string;
     };
+    ScreenOrientation: {
+        PORTRAIT: number;
+        LANDSCAPE: number;
+    };
     ButtonTag: {
         CLOSE: number;
         TORCH: number;
@@ -746,10 +836,12 @@ export declare const Enum: {
     CustomizationFont: {
         ONBOARDING_SCREEN_START_BUTTON: string;
         ONBOARDING_SCREEN_TITLE_LABEL: string;
-        ONBOARDING_SCREEN_MESSAGE_LABEL: string;
+        ONBOARDING_SCREEN_SUBTITLE_LABEL: string;
+        ONBOARDING_SCREEN_MESSAGE_LABELS: string;
         CAMERA_SCREEN_HINT_LABEL: string;
         RETRY_SCREEN_RETRY_BUTTON: string;
         RETRY_SCREEN_TITLE_LABEL: string;
+        RETRY_SCREEN_SUBTITLE_LABEL: string;
         RETRY_SCREEN_HINT_LABELS: string;
         PROCESSING_SCREEN: string;
     };
@@ -787,6 +879,10 @@ export declare const Enum: {
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_1X1: number;
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
     };
+    LivenessType: {
+        ACTIVE: string;
+        PASSIVE: string;
+    };
     LivenessSkipStep: {
         ONBOARDING_STEP: number;
         SUCCESS_STEP: number;
@@ -803,24 +899,25 @@ export declare const Enum: {
         DOCUMENT_WITH_LIVE: number;
         EXTERNAL: number;
         GHOST_PORTRAIT: number;
+        BARCODE: number;
     };
     FaceCaptureErrorCode: {
-        CANCEL: string;
-        CAMERA_NOT_AVAILABLE: string;
-        CAMERA_NO_PERMISSION: string;
-        IN_PROGRESS_ALREADY: string;
-        CONTEXT_IS_NULL: string;
-        TIMEOUT: string;
-        NOT_INITIALIZED: string;
-        SESSION_START_FAILED: string;
+        CANCEL: number;
+        TIMEOUT: number;
+        NOT_INITIALIZED: number;
+        SESSION_START_FAILED: number;
+        CAMERA_NOT_AVAILABLE: number;
+        CAMERA_NO_PERMISSION: number;
+        IN_PROGRESS_ALREADY: number;
+        CONTEXT_IS_NULL: number;
     };
     LivenessBackendErrorCode: {
         UNDEFINED: number;
         NO_LICENSE: number;
         LOW_QUALITY: number;
-        HIGH_ASYMMETRY: number;
         TRACK_BREAK: number;
         CLOSED_EYES_DETECTED: number;
+        HIGH_ASYMMETRY: number;
         FACE_OVER_EMOTIONAL: number;
         SUNGLASSES_DETECTED: number;
         SMALL_AGE: number;
@@ -836,6 +933,10 @@ export declare const Enum: {
         WRONG_GEO: number;
         WRONG_OF: number;
         WRONG_VIEW: number;
+    };
+    ProcessingMode: {
+        ONLINE: string;
+        OFFLINE: string;
     };
     CustomizationImage: {
         ONBOARDING_SCREEN_CLOSE_BUTTON: string;
@@ -921,13 +1022,39 @@ export declare class FaceSDK extends AwesomeCordovaNativePlugin {
      *
      * @return {Promise<any>} Returns a promise
      */
+    /**
+     * @deprecated
+     */
     init(): Promise<any>;
     /**
      *  description
      *
      * @return {Promise<any>} Returns a promise
      */
+    initialize(): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {object} config String license - license base64
+     *  boolean licenseUpdate
+     * @return {Promise<any>} Returns a promise
+     */
+    initializeWithConfig(config: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    /**
+     * @deprecated
+     */
     deinit(): Promise<any>;
+    /**
+     *  description
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    deinitialize(): Promise<any>;
     /**
      *  description
      *
@@ -964,6 +1091,14 @@ export declare class FaceSDK extends AwesomeCordovaNativePlugin {
     /**
      *  description
      *
+     * @param {MatchFacesRequest} request description
+     * @param {object} config ProcessingMode processingMode
+     * @return {Promise<any>} Returns a promise
+     */
+    matchFacesWithConfig(request: any, config: any): Promise<any>;
+    /**
+     *  description
+     *
      * @param {object} config int cameraId - set camera on Android
      *  CameraPosition cameraPositionIOS - set camera on iOS
      *  boolean cameraSwitchEnabled
@@ -982,6 +1117,27 @@ export declare class FaceSDK extends AwesomeCordovaNativePlugin {
      * @return {Promise<any>} Returns a promise
      */
     setServiceUrl(url: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {boolean} isEnable description
+     * @return {Promise<any>} Returns a promise
+     */
+    setLogs(isEnable: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {boolean} isSaveLog description
+     * @return {Promise<any>} Returns a promise
+     */
+    setSaveLogs(isSaveLog: any): Promise<any>;
+    /**
+     *  description
+     *
+     * @param {boolean} path description
+     * @return {Promise<any>} Returns a promise
+     */
+    setLogsFolder(path: any): Promise<any>;
     /**
      *  description
      *
@@ -1182,7 +1338,7 @@ export declare class FaceSDK extends AwesomeCordovaNativePlugin {
     /**
      *  description
      *
-     * @param {SearchPersonRequest} searchPersonRequest description
+     * @param {object} searchPersonRequest description
      * @return {Promise<any>} Returns a promise
      */
     searchPerson(searchPersonRequest: any): Promise<any>;
