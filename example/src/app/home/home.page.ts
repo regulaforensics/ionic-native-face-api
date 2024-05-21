@@ -3,7 +3,7 @@ import { Dialogs } from '@awesome-cordova-plugins/dialogs/ngx'
 import { File } from '@awesome-cordova-plugins/file'
 import { Camera, DestinationType, MediaType, PictureSourceType } from '@awesome-cordova-plugins/camera/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK, MatchFacesSimilarityThresholdSplit, InitializationConfiguration } from '@regulaforensics/ionic-native-face-api/ngx'
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK, ComparedFacesSplit, InitResponse, LivenessSkipStep, InitConfig } from '@regulaforensics/ionic-native-face-api/ngx'
 
 var image1 = new MatchFacesImage()
 var image2 = new MatchFacesImage()
@@ -36,10 +36,10 @@ export class HomePage {
     app.clearResultsButton.nativeElement.addEventListener("click", clearResults)
 
     var onInit = (json: any) => {
-      var response = JSON.stringify(json)
-      if (response["success"] == false) {
-        console.log("Init failed: ");
-        console.log(json);
+      var response = InitResponse.fromJson(JSON.parse(json))
+      if (!response.success) {
+        console.log(response.error.code);
+        console.log(response.error.message);
       } else {
         console.log("Init complete")
       }
@@ -50,21 +50,21 @@ export class HomePage {
         var reader = new FileReader()
         reader.onloadend = (_) => {
           var license = reader.result as String
-          var config = new InitializationConfiguration()
+          var config = new InitConfig()
           config.license = license.substring(license.indexOf(',') + 1)
-          FaceSDK.initializeWithConfig(config).then(onInit)
+          FaceSDK.initialize(config).then(onInit)
         }
         reader.readAsDataURL(file)
       })).catch(_ => {
-        FaceSDK.initialize().then(onInit)
+        FaceSDK.initialize(null).then(onInit)
       }))
     })
 
     function liveness() {
-      FaceSDK.startLiveness().then((result: any) => {
+      FaceSDK.startLiveness({ skipStep: [LivenessSkipStep.ONBOARDING_STEP] }).then((result: any) => {
         result = LivenessResponse.fromJson(JSON.parse(result))
         if (result.bitmap == null) return
-        image1.bitmap = result.bitmap
+        image1.image = result.bitmap
         image1.imageType = Enum.ImageType.LIVE
         app.img1.nativeElement.src = "data:image/png;base64," + result.bitmap
         app.livenessResult.nativeElement.innerHTML = result["liveness"] == Enum.LivenessStatus.PASSED ? "passed" : "not passed"
@@ -72,15 +72,15 @@ export class HomePage {
     }
 
     function matchFaces() {
-      if (image1 == null || image1.bitmap == null || image1.bitmap == "" || image2 == null || image2.bitmap == null || image2.bitmap == "")
+      if (image1 == null || image1.image == null || image1.image == "" || image2 == null || image2.image == null || image2.image == "")
         return
       app.similarityResult.nativeElement.innerHTML = "Processing..."
       var request = new MatchFacesRequest()
       request.images = [image1, image2]
-      FaceSDK.matchFaces(JSON.stringify(request)).then((response: any) => {
+      FaceSDK.matchFaces(request, null).then((response: any) => {
         response = MatchFacesResponse.fromJson(JSON.parse(response))
-        FaceSDK.matchFacesSimilarityThresholdSplit(JSON.stringify(response.results), 0.75).then((str: any) => {
-          var split = MatchFacesSimilarityThresholdSplit.fromJson(JSON.parse(str))
+        FaceSDK.splitComparedFaces(response.results, 0.75).then((str: any) => {
+          var split = ComparedFacesSplit.fromJson(JSON.parse(str))
           app.similarityResult.nativeElement.innerHTML = split.matchedFaces.length > 0 ? ((split.matchedFaces[0].similarity * 100).toFixed(2) + "%") : "error"
         })
       })
@@ -98,9 +98,9 @@ export class HomePage {
     function pickImage(first: boolean) {
       app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button: number) => {
         if (button == 1)
-          FaceSDK.presentFaceCaptureActivity().then((result: any) => setImage(
+          FaceSDK.startFaceCapture(null).then((result: any) => setImage(
             first,
-            FaceCaptureResponse.fromJson(JSON.parse(result)).image.bitmap,
+            FaceCaptureResponse.fromJson(JSON.parse(result)).image.image,
             Enum.ImageType.LIVE
           ))
         else app.camera.getPicture({
@@ -115,13 +115,13 @@ export class HomePage {
       if (base64 == null) return
       app.similarityResult.nativeElement.innerHTML = "nil"
       if (first) {
-        image1.bitmap = base64
+        image1.image = base64
         image1.imageType = type
         app.img1.nativeElement.src = "data:image/png;base64," + base64
         app.livenessResult.nativeElement.innerHTML = "nil"
       }
       else {
-        image2.bitmap = base64
+        image2.image = base64
         image2.imageType = type
         app.img2.nativeElement.src = "data:image/png;base64," + base64
       }
