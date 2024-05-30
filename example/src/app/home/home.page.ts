@@ -3,7 +3,7 @@ import { Dialogs } from '@awesome-cordova-plugins/dialogs/ngx'
 import { File } from '@awesome-cordova-plugins/file'
 import { Camera, DestinationType, MediaType, PictureSourceType } from '@awesome-cordova-plugins/camera/ngx'
 import { Platform } from '@ionic/angular'
-import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK, ComparedFacesSplit, InitResponse, LivenessSkipStep, InitConfig } from '@regulaforensics/ionic-native-face-api/ngx'
+import { Enum, FaceCaptureResponse, LivenessResponse, MatchFacesResponse, MatchFacesRequest, MatchFacesImage, FaceSDK, ComparedFacesSplit, InitResponse, LivenessSkipStep, InitConfig, LivenessNotification } from '@regulaforensics/ionic-native-face-api/ngx'
 
 var image1 = new MatchFacesImage()
 var image2 = new MatchFacesImage()
@@ -61,13 +61,27 @@ export class HomePage {
     })
 
     function liveness() {
-      FaceSDK.startLiveness({ skipStep: [LivenessSkipStep.ONBOARDING_STEP] }).then((result: any) => {
-        result = LivenessResponse.fromJson(JSON.parse(result))
-        if (result.bitmap == null) return
-        image1.image = result.bitmap
-        image1.imageType = Enum.ImageType.LIVE
-        app.img1.nativeElement.src = "data:image/png;base64," + result.bitmap
-        app.livenessResult.nativeElement.innerHTML = result["liveness"] == Enum.LivenessStatus.PASSED ? "passed" : "not passed"
+      FaceSDK.startLiveness({ skipStep: [LivenessSkipStep.ONBOARDING_STEP] }).subscribe((raw: string) => {
+        // handling events
+        var lnEventId = "livenessNotificationEvent"
+        var csEventId = "cameraSwitchEvent"
+        if (raw.substring(0, lnEventId.length) === lnEventId) {
+          raw = raw.substring(lnEventId.length, raw.length)
+          var notification = LivenessNotification.fromJson(JSON.parse(raw))
+          console.log("LivenessStatus: " + notification.status)
+        } if (raw.substring(0, csEventId.length) === csEventId) {
+          raw = raw.substring(csEventId.length, raw.length)
+          var cameraId = raw
+          console.log("switched to camera " + cameraId)
+        } else {
+          // handling response
+          var result = LivenessResponse.fromJson(JSON.parse(raw))
+          if (result.image == null) return
+          image1.image = result.image
+          image1.imageType = Enum.ImageType.LIVE
+          app.img1.nativeElement.src = "data:image/png;base64," + result.image
+          app.livenessResult.nativeElement.innerHTML = result.liveness == Enum.LivenessStatus.PASSED ? "passed" : "not passed"
+        }
       })
     }
 
@@ -98,11 +112,22 @@ export class HomePage {
     function pickImage(first: boolean) {
       app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button: number) => {
         if (button == 1)
-          FaceSDK.startFaceCapture(null).then((result: any) => setImage(
-            first,
-            FaceCaptureResponse.fromJson(JSON.parse(result)).image.image,
-            Enum.ImageType.LIVE
-          ))
+          FaceSDK.startFaceCapture(null).subscribe((raw: any) => {
+            // handling event
+            var csEventId = "cameraSwitchEvent"
+            if (raw.substring(0, csEventId.length) === csEventId) {
+              raw = raw.substring(csEventId.length, raw.length)
+              var cameraId = raw
+              console.log("switched to camera " + cameraId)
+            } else {
+              // handling response
+              setImage(
+                first,
+                FaceCaptureResponse.fromJson(JSON.parse(raw)).image.image,
+                Enum.ImageType.LIVE
+              )
+            }
+          })
         else app.camera.getPicture({
           destinationType: DestinationType.DATA_URL,
           mediaType: MediaType.PICTURE,

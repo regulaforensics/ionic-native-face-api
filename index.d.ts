@@ -1,4 +1,5 @@
 import { AwesomeCordovaNativePlugin } from '@awesome-cordova-plugins/core';
+import { Observable } from 'rxjs';
 export declare class Customization {
     colors?: Record<number, number>;
     fonts?: Record<number, Font>;
@@ -66,6 +67,7 @@ export declare class FaceCaptureConfig {
     cameraSwitchEnabled?: boolean;
     closeButtonEnabled?: boolean;
     torchButtonEnabled?: boolean;
+    vibrateOnSteps?: boolean;
     cameraPositionAndroid?: number;
     cameraPositionIOS?: number;
     screenOrientation?: number[];
@@ -138,6 +140,12 @@ export declare class ImageQualityResult {
     value?: number;
     static fromJson(jsonObject?: any): ImageQualityResult | undefined;
 }
+export declare class FaceSDKVersion {
+    api?: string;
+    core?: string;
+    coreMode?: string;
+    static fromJson(jsonObject?: any): FaceSDKVersion | undefined;
+}
 export declare class InitConfig {
     license?: string;
     licenseUpdate?: boolean;
@@ -154,6 +162,7 @@ export declare class LivenessConfig {
     cameraSwitchEnabled?: boolean;
     closeButtonEnabled?: boolean;
     torchButtonEnabled?: boolean;
+    vibrateOnSteps?: boolean;
     cameraPositionAndroid?: number;
     cameraPositionIOS?: number;
     screenOrientation?: number[];
@@ -163,6 +172,7 @@ export declare class LivenessConfig {
     livenessType?: number;
     tag?: string;
     skipStep?: number[];
+    metadata?: any;
     static fromJson(jsonObject?: any): LivenessConfig | undefined;
 }
 export declare class LivenessException {
@@ -242,7 +252,7 @@ export declare class MatchFacesRequest {
     images?: MatchFacesImage[];
     outputImageParams?: OutputImageParams;
     tag?: string;
-    metadata?: Record<string, any>;
+    metadata?: any;
     static fromJson(jsonObject?: any): MatchFacesRequest | undefined;
 }
 export declare class MatchFacesResponse {
@@ -273,14 +283,14 @@ export declare class Person {
     updatedAt?: string;
     groups?: string[];
     id?: string;
-    metadata?: Record<string, any>;
+    metadata?: any;
     createdAt?: string;
     static fromJson(jsonObject?: any): Person | undefined;
 }
 export declare class PersonGroup {
     name?: string;
     id?: string;
-    metadata?: Record<string, any>;
+    metadata?: any;
     createdAt?: string;
     static fromJson(jsonObject?: any): PersonGroup | undefined;
 }
@@ -289,7 +299,7 @@ export declare class PersonImage {
     url?: string;
     contentType?: string;
     id?: string;
-    metadata?: Record<string, any>;
+    metadata?: any;
     createdAt?: string;
     static fromJson(jsonObject?: any): PersonImage | undefined;
 }
@@ -300,7 +310,7 @@ export declare class SearchPerson {
     updatedAt?: string;
     groups?: string[];
     id?: string;
-    metadata?: Record<string, any>;
+    metadata?: any;
     createdAt?: string;
     static fromJson(jsonObject?: any): SearchPerson | undefined;
 }
@@ -318,7 +328,7 @@ export declare class SearchPersonImage {
     url?: string;
     contentType?: string;
     id?: string;
-    metadata?: Record<string, any>;
+    metadata?: any;
     createdAt?: string;
     static fromJson(jsonObject?: any): SearchPersonImage | undefined;
 }
@@ -353,32 +363,32 @@ export declare const FontStyle: {
     BOLD_ITALIC: number;
 };
 export declare const CustomizationColor: {
-    ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: string;
-    ONBOARDING_SCREEN_START_BUTTON_TITLE: string;
-    ONBOARDING_SCREEN_BACKGROUND: string;
-    ONBOARDING_SCREEN_TITLE_LABEL_TEXT: string;
-    ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: string;
-    ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: string;
-    CAMERA_SCREEN_STROKE_NORMAL: string;
-    CAMERA_SCREEN_STROKE_ACTIVE: string;
-    CAMERA_SCREEN_SECTOR_TARGET: string;
-    CAMERA_SCREEN_SECTOR_ACTIVE: string;
-    CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: string;
-    CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: string;
-    CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: string;
-    CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: string;
-    CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: string;
-    CAMERA_SCREEN_DARK_TOOLBAR_TINT: string;
-    RETRY_SCREEN_BACKGROUND: string;
-    RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: string;
-    RETRY_SCREEN_RETRY_BUTTON_TITLE: string;
-    RETRY_SCREEN_TITLE_LABEL_TEXT: string;
-    RETRY_SCREEN_SUBTITLE_LABEL_TEXT: string;
-    RETRY_SCREEN_HINT_LABELS_TEXT: string;
-    PROCESSING_SCREEN_BACKGROUND: string;
-    PROCESSING_SCREEN_PROGRESS: string;
-    PROCESSING_SCREEN_TITLE: string;
-    SUCCESS_SCREEN_BACKGROUND: string;
+    ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: number;
+    ONBOARDING_SCREEN_START_BUTTON_TITLE: number;
+    ONBOARDING_SCREEN_BACKGROUND: number;
+    ONBOARDING_SCREEN_TITLE_LABEL_TEXT: number;
+    ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: number;
+    ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: number;
+    CAMERA_SCREEN_STROKE_NORMAL: number;
+    CAMERA_SCREEN_STROKE_ACTIVE: number;
+    CAMERA_SCREEN_SECTOR_TARGET: number;
+    CAMERA_SCREEN_SECTOR_ACTIVE: number;
+    CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: number;
+    CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: number;
+    CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: number;
+    CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: number;
+    CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: number;
+    CAMERA_SCREEN_DARK_TOOLBAR_TINT: number;
+    RETRY_SCREEN_BACKGROUND: number;
+    RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: number;
+    RETRY_SCREEN_RETRY_BUTTON_TITLE: number;
+    RETRY_SCREEN_TITLE_LABEL_TEXT: number;
+    RETRY_SCREEN_SUBTITLE_LABEL_TEXT: number;
+    RETRY_SCREEN_HINT_LABELS_TEXT: number;
+    PROCESSING_SCREEN_BACKGROUND: number;
+    PROCESSING_SCREEN_PROGRESS: number;
+    PROCESSING_SCREEN_TITLE: number;
+    SUCCESS_SCREEN_BACKGROUND: number;
 };
 export declare const ImageQualityGroupName: {
     IMAGE_CHARACTERISTICS: number;
@@ -451,9 +461,9 @@ export declare const LivenessErrorCode: {
     CAMERA_NOT_AVAILABLE: number;
 };
 export declare const RecordingProcess: {
-    ASYNCHRONOUS_UPLOAD: string;
-    SYNCHRONOUS_UPLOAD: string;
-    NOT_UPLOAD: string;
+    ASYNCHRONOUS_UPLOAD: number;
+    SYNCHRONOUS_UPLOAD: number;
+    NOT_UPLOAD: number;
 };
 export declare const DetectFacesBackendErrorCode: {
     FR_FACE_NOT_DETECTED: number;
@@ -537,16 +547,16 @@ export declare const ScreenOrientation: {
     LANDSCAPE: number;
 };
 export declare const CustomizationFont: {
-    ONBOARDING_SCREEN_START_BUTTON: string;
-    ONBOARDING_SCREEN_TITLE_LABEL: string;
-    ONBOARDING_SCREEN_SUBTITLE_LABEL: string;
-    ONBOARDING_SCREEN_MESSAGE_LABELS: string;
-    CAMERA_SCREEN_HINT_LABEL: string;
-    RETRY_SCREEN_RETRY_BUTTON: string;
-    RETRY_SCREEN_TITLE_LABEL: string;
-    RETRY_SCREEN_SUBTITLE_LABEL: string;
-    RETRY_SCREEN_HINT_LABELS: string;
-    PROCESSING_SCREEN: string;
+    ONBOARDING_SCREEN_START_BUTTON: number;
+    ONBOARDING_SCREEN_TITLE_LABEL: number;
+    ONBOARDING_SCREEN_SUBTITLE_LABEL: number;
+    ONBOARDING_SCREEN_MESSAGE_LABELS: number;
+    CAMERA_SCREEN_HINT_LABEL: number;
+    RETRY_SCREEN_RETRY_BUTTON: number;
+    RETRY_SCREEN_TITLE_LABEL: number;
+    RETRY_SCREEN_SUBTITLE_LABEL: number;
+    RETRY_SCREEN_HINT_LABELS: number;
+    PROCESSING_SCREEN: number;
 };
 export declare const DetectFacesScenario: {
     CROP_CENTRAL_FACE: string;
@@ -559,21 +569,21 @@ export declare const DetectFacesScenario: {
     QUALITY_VISA_USA: string;
 };
 export declare const LivenessProcessStatus: {
-    START: string;
-    PREPARING: string;
-    NEW_SESSION: string;
-    NEXT_STAGE: string;
-    SECTOR_CHANGED: string;
-    PROGRESS: string;
-    LOW_BRIGHTNESS: string;
-    FIT_FACE: string;
-    MOVE_AWAY: string;
-    MOVE_CLOSER: string;
-    TURN_HEAD: string;
-    PROCESSING: string;
-    FAILED: string;
-    RETRY: string;
-    SUCCESS: string;
+    START: number;
+    PREPARING: number;
+    NEW_SESSION: number;
+    NEXT_STAGE: number;
+    SECTOR_CHANGED: number;
+    PROGRESS: number;
+    LOW_BRIGHTNESS: number;
+    FIT_FACE: number;
+    MOVE_AWAY: number;
+    MOVE_CLOSER: number;
+    TURN_HEAD: number;
+    PROCESSING: number;
+    FAILED: number;
+    RETRY: number;
+    SUCCESS: number;
 };
 export declare const OutputImageCropAspectRatio: {
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: number;
@@ -583,8 +593,8 @@ export declare const OutputImageCropAspectRatio: {
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
 };
 export declare const LivenessType: {
-    ACTIVE: string;
-    PASSIVE: string;
+    ACTIVE: number;
+    PASSIVE: number;
 };
 export declare const LivenessSkipStep: {
     ONBOARDING_STEP: number;
@@ -638,23 +648,23 @@ export declare const LivenessBackendErrorCode: {
     WRONG_VIEW: number;
 };
 export declare const ProcessingMode: {
-    ONLINE: string;
-    OFFLINE: string;
+    ONLINE: number;
+    OFFLINE: number;
 };
 export declare const CustomizationImage: {
-    ONBOARDING_SCREEN_CLOSE_BUTTON: string;
-    ONBOARDING_SCREEN_ILLUMINATION: string;
-    ONBOARDING_SCREEN_ACCESSORIES: string;
-    ONBOARDING_SCREEN_CAMERA_LEVEL: string;
-    CAMERA_SCREEN_CLOSE_BUTTON: string;
-    CAMERA_SCREEN_LIGHT_ON_BUTTON: string;
-    CAMERA_SCREEN_LIGHT_OFF_BUTTON: string;
-    CAMERA_SCREEN_SWITCH_BUTTON: string;
-    RETRY_SCREEN_CLOSE_BUTTON: string;
-    RETRY_SCREEN_HINT_ENVIRONMENT: string;
-    RETRY_SCREEN_HINT_SUBJECT: string;
-    PROCESSING_SCREEN_CLOSE_BUTTON: string;
-    SUCCESS_SCREEN_IMAGE: string;
+    ONBOARDING_SCREEN_CLOSE_BUTTON: number;
+    ONBOARDING_SCREEN_ILLUMINATION: number;
+    ONBOARDING_SCREEN_ACCESSORIES: number;
+    ONBOARDING_SCREEN_CAMERA_LEVEL: number;
+    CAMERA_SCREEN_CLOSE_BUTTON: number;
+    CAMERA_SCREEN_LIGHT_ON_BUTTON: number;
+    CAMERA_SCREEN_LIGHT_OFF_BUTTON: number;
+    CAMERA_SCREEN_SWITCH_BUTTON: number;
+    RETRY_SCREEN_CLOSE_BUTTON: number;
+    RETRY_SCREEN_HINT_ENVIRONMENT: number;
+    RETRY_SCREEN_HINT_SUBJECT: number;
+    PROCESSING_SCREEN_CLOSE_BUTTON: number;
+    SUCCESS_SCREEN_IMAGE: number;
 };
 export declare const DetectFacesAttribute: {
     AGE: string;
@@ -679,32 +689,32 @@ export declare const Enum: {
         BOLD_ITALIC: number;
     };
     CustomizationColor: {
-        ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: string;
-        ONBOARDING_SCREEN_START_BUTTON_TITLE: string;
-        ONBOARDING_SCREEN_BACKGROUND: string;
-        ONBOARDING_SCREEN_TITLE_LABEL_TEXT: string;
-        ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: string;
-        ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: string;
-        CAMERA_SCREEN_STROKE_NORMAL: string;
-        CAMERA_SCREEN_STROKE_ACTIVE: string;
-        CAMERA_SCREEN_SECTOR_TARGET: string;
-        CAMERA_SCREEN_SECTOR_ACTIVE: string;
-        CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: string;
-        CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: string;
-        CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: string;
-        CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: string;
-        CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: string;
-        CAMERA_SCREEN_DARK_TOOLBAR_TINT: string;
-        RETRY_SCREEN_BACKGROUND: string;
-        RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: string;
-        RETRY_SCREEN_RETRY_BUTTON_TITLE: string;
-        RETRY_SCREEN_TITLE_LABEL_TEXT: string;
-        RETRY_SCREEN_SUBTITLE_LABEL_TEXT: string;
-        RETRY_SCREEN_HINT_LABELS_TEXT: string;
-        PROCESSING_SCREEN_BACKGROUND: string;
-        PROCESSING_SCREEN_PROGRESS: string;
-        PROCESSING_SCREEN_TITLE: string;
-        SUCCESS_SCREEN_BACKGROUND: string;
+        ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: number;
+        ONBOARDING_SCREEN_START_BUTTON_TITLE: number;
+        ONBOARDING_SCREEN_BACKGROUND: number;
+        ONBOARDING_SCREEN_TITLE_LABEL_TEXT: number;
+        ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: number;
+        ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: number;
+        CAMERA_SCREEN_STROKE_NORMAL: number;
+        CAMERA_SCREEN_STROKE_ACTIVE: number;
+        CAMERA_SCREEN_SECTOR_TARGET: number;
+        CAMERA_SCREEN_SECTOR_ACTIVE: number;
+        CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: number;
+        CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: number;
+        CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: number;
+        CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: number;
+        CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: number;
+        CAMERA_SCREEN_DARK_TOOLBAR_TINT: number;
+        RETRY_SCREEN_BACKGROUND: number;
+        RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: number;
+        RETRY_SCREEN_RETRY_BUTTON_TITLE: number;
+        RETRY_SCREEN_TITLE_LABEL_TEXT: number;
+        RETRY_SCREEN_SUBTITLE_LABEL_TEXT: number;
+        RETRY_SCREEN_HINT_LABELS_TEXT: number;
+        PROCESSING_SCREEN_BACKGROUND: number;
+        PROCESSING_SCREEN_PROGRESS: number;
+        PROCESSING_SCREEN_TITLE: number;
+        SUCCESS_SCREEN_BACKGROUND: number;
     };
     ImageQualityGroupName: {
         IMAGE_CHARACTERISTICS: number;
@@ -777,9 +787,9 @@ export declare const Enum: {
         CAMERA_NOT_AVAILABLE: number;
     };
     RecordingProcess: {
-        ASYNCHRONOUS_UPLOAD: string;
-        SYNCHRONOUS_UPLOAD: string;
-        NOT_UPLOAD: string;
+        ASYNCHRONOUS_UPLOAD: number;
+        SYNCHRONOUS_UPLOAD: number;
+        NOT_UPLOAD: number;
     };
     DetectFacesBackendErrorCode: {
         FR_FACE_NOT_DETECTED: number;
@@ -863,16 +873,16 @@ export declare const Enum: {
         LANDSCAPE: number;
     };
     CustomizationFont: {
-        ONBOARDING_SCREEN_START_BUTTON: string;
-        ONBOARDING_SCREEN_TITLE_LABEL: string;
-        ONBOARDING_SCREEN_SUBTITLE_LABEL: string;
-        ONBOARDING_SCREEN_MESSAGE_LABELS: string;
-        CAMERA_SCREEN_HINT_LABEL: string;
-        RETRY_SCREEN_RETRY_BUTTON: string;
-        RETRY_SCREEN_TITLE_LABEL: string;
-        RETRY_SCREEN_SUBTITLE_LABEL: string;
-        RETRY_SCREEN_HINT_LABELS: string;
-        PROCESSING_SCREEN: string;
+        ONBOARDING_SCREEN_START_BUTTON: number;
+        ONBOARDING_SCREEN_TITLE_LABEL: number;
+        ONBOARDING_SCREEN_SUBTITLE_LABEL: number;
+        ONBOARDING_SCREEN_MESSAGE_LABELS: number;
+        CAMERA_SCREEN_HINT_LABEL: number;
+        RETRY_SCREEN_RETRY_BUTTON: number;
+        RETRY_SCREEN_TITLE_LABEL: number;
+        RETRY_SCREEN_SUBTITLE_LABEL: number;
+        RETRY_SCREEN_HINT_LABELS: number;
+        PROCESSING_SCREEN: number;
     };
     DetectFacesScenario: {
         CROP_CENTRAL_FACE: string;
@@ -885,21 +895,21 @@ export declare const Enum: {
         QUALITY_VISA_USA: string;
     };
     LivenessProcessStatus: {
-        START: string;
-        PREPARING: string;
-        NEW_SESSION: string;
-        NEXT_STAGE: string;
-        SECTOR_CHANGED: string;
-        PROGRESS: string;
-        LOW_BRIGHTNESS: string;
-        FIT_FACE: string;
-        MOVE_AWAY: string;
-        MOVE_CLOSER: string;
-        TURN_HEAD: string;
-        PROCESSING: string;
-        FAILED: string;
-        RETRY: string;
-        SUCCESS: string;
+        START: number;
+        PREPARING: number;
+        NEW_SESSION: number;
+        NEXT_STAGE: number;
+        SECTOR_CHANGED: number;
+        PROGRESS: number;
+        LOW_BRIGHTNESS: number;
+        FIT_FACE: number;
+        MOVE_AWAY: number;
+        MOVE_CLOSER: number;
+        TURN_HEAD: number;
+        PROCESSING: number;
+        FAILED: number;
+        RETRY: number;
+        SUCCESS: number;
     };
     OutputImageCropAspectRatio: {
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: number;
@@ -909,8 +919,8 @@ export declare const Enum: {
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
     };
     LivenessType: {
-        ACTIVE: string;
-        PASSIVE: string;
+        ACTIVE: number;
+        PASSIVE: number;
     };
     LivenessSkipStep: {
         ONBOARDING_STEP: number;
@@ -964,23 +974,23 @@ export declare const Enum: {
         WRONG_VIEW: number;
     };
     ProcessingMode: {
-        ONLINE: string;
-        OFFLINE: string;
+        ONLINE: number;
+        OFFLINE: number;
     };
     CustomizationImage: {
-        ONBOARDING_SCREEN_CLOSE_BUTTON: string;
-        ONBOARDING_SCREEN_ILLUMINATION: string;
-        ONBOARDING_SCREEN_ACCESSORIES: string;
-        ONBOARDING_SCREEN_CAMERA_LEVEL: string;
-        CAMERA_SCREEN_CLOSE_BUTTON: string;
-        CAMERA_SCREEN_LIGHT_ON_BUTTON: string;
-        CAMERA_SCREEN_LIGHT_OFF_BUTTON: string;
-        CAMERA_SCREEN_SWITCH_BUTTON: string;
-        RETRY_SCREEN_CLOSE_BUTTON: string;
-        RETRY_SCREEN_HINT_ENVIRONMENT: string;
-        RETRY_SCREEN_HINT_SUBJECT: string;
-        PROCESSING_SCREEN_CLOSE_BUTTON: string;
-        SUCCESS_SCREEN_IMAGE: string;
+        ONBOARDING_SCREEN_CLOSE_BUTTON: number;
+        ONBOARDING_SCREEN_ILLUMINATION: number;
+        ONBOARDING_SCREEN_ACCESSORIES: number;
+        ONBOARDING_SCREEN_CAMERA_LEVEL: number;
+        CAMERA_SCREEN_CLOSE_BUTTON: number;
+        CAMERA_SCREEN_LIGHT_ON_BUTTON: number;
+        CAMERA_SCREEN_LIGHT_OFF_BUTTON: number;
+        CAMERA_SCREEN_SWITCH_BUTTON: number;
+        RETRY_SCREEN_CLOSE_BUTTON: number;
+        RETRY_SCREEN_HINT_ENVIRONMENT: number;
+        RETRY_SCREEN_HINT_SUBJECT: number;
+        PROCESSING_SCREEN_CLOSE_BUTTON: number;
+        SUCCESS_SCREEN_IMAGE: number;
     };
     DetectFacesAttribute: {
         AGE: string;
@@ -1021,7 +1031,7 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
      *
      * @return {Promise<any>} Returns a promise
      */
-    getFaceSdkVersion(): Promise<any>;
+    getVersion(): Promise<any>;
     /**
      *
      *
@@ -1059,6 +1069,12 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
     /**
      *
      *
+     * @return {Promise<any>} Returns a promise
+     */
+    isInitialized(): Promise<any>;
+    /**
+     *
+     *
      * @param {InitConfig} config
      * @return {Promise<any>} Returns a promise
      */
@@ -1075,7 +1091,7 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
      * @param {FaceCaptureConfig} config
      * @return {Promise<any>} Returns a promise
      */
-    startFaceCapture(config: FaceCaptureConfig | null): Promise<any>;
+    startFaceCapture(config: FaceCaptureConfig | null): Observable<any>;
     /**
      *
      *
@@ -1088,7 +1104,7 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
      * @param {LivenessConfig} config
      * @return {Promise<any>} Returns a promise
      */
-    startLiveness(config: LivenessConfig | null): Promise<any>;
+    startLiveness(config: LivenessConfig | null): Observable<any>;
     /**
      *
      *
@@ -1106,11 +1122,11 @@ export declare class FaceSDKOriginal extends AwesomeCordovaNativePlugin {
     /**
      *
      *
-     * @param {ComparedFacesPair[]} faces
-     * @param {number} similarity
+     * @param {ComparedFacesPair[]} facesPairs
+     * @param {number} similarityThreshold
      * @return {Promise<any>} Returns a promise
      */
-    splitComparedFaces(faces: ComparedFacesPair[], similarity: number): Promise<any>;
+    splitComparedFaces(facesPairs: ComparedFacesPair[], similarityThreshold: number): Promise<any>;
     /**
      *
      *
