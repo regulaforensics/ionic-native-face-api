@@ -1,120 +1,107 @@
 import { AwesomeCordovaNativePlugin } from '@awesome-cordova-plugins/core';
+import { Observable } from 'rxjs';
+export declare class Customization {
+    colors?: Record<number, number>;
+    fonts?: Record<number, Font>;
+    images?: Record<number, string>;
+    uiCustomizationLayer?: Record<string, any>;
+    static fromJson(jsonObject?: any): Customization | undefined;
+}
+export declare class Font {
+    name?: string;
+    style?: number;
+    size?: number;
+    static fromJson(jsonObject?: any): Font | undefined;
+}
+export declare class DetectFaceResult {
+    quality?: ImageQualityResult[];
+    attributes?: DetectFacesAttributeResult[];
+    crop?: string;
+    faceRect?: Rect;
+    originalRect?: Rect;
+    landmarks?: Point[];
+    isQualityCompliant?: boolean;
+    static fromJson(jsonObject?: any): DetectFaceResult | undefined;
+}
+export declare class DetectFacesAttributeResult {
+    attribute?: string;
+    value?: string;
+    range?: ImageQualityRange;
+    confidence?: number;
+    static fromJson(jsonObject?: any): DetectFacesAttributeResult | undefined;
+}
+export declare class DetectFacesConfig {
+    attributes?: string[];
+    customQuality?: ImageQualityCharacteristic[];
+    outputImageParams?: OutputImageParams;
+    onlyCentralFace?: boolean;
+    static fromJson(jsonObject?: any): DetectFacesConfig | undefined;
+}
+export declare class UnderlyingException {
+    code?: number;
+    message?: string;
+    static fromJson(jsonObject?: any): UnderlyingException | undefined;
+}
+export declare class DetectFacesException {
+    code?: number;
+    message?: string;
+    underlyingError?: UnderlyingException;
+    static fromJson(jsonObject?: any): DetectFacesException | undefined;
+}
+export declare class DetectFacesRequest {
+    tag?: string;
+    scenario?: string;
+    image?: string;
+    configuration?: DetectFacesConfig;
+    static fromJson(jsonObject?: any): DetectFacesRequest | undefined;
+}
+export declare class DetectFacesResponse {
+    detection?: DetectFaceResult;
+    scenario?: string;
+    error?: DetectFacesException;
+    allDetections?: DetectFaceResult[];
+    static fromJson(jsonObject?: any): DetectFacesResponse | undefined;
+}
+export declare class FaceCaptureConfig {
+    copyright?: boolean;
+    cameraSwitchEnabled?: boolean;
+    closeButtonEnabled?: boolean;
+    torchButtonEnabled?: boolean;
+    vibrateOnSteps?: boolean;
+    cameraPositionAndroid?: number;
+    cameraPositionIOS?: number;
+    screenOrientation?: number[];
+    timeout?: number;
+    holdStillDuration?: number;
+    static fromJson(jsonObject?: any): FaceCaptureConfig | undefined;
+}
 export declare class FaceCaptureException {
-    errorCode?: number;
+    code?: number;
     message?: string;
     static fromJson(jsonObject?: any): FaceCaptureException | undefined;
 }
-export declare class InitException {
-    errorCode?: number;
-    underlyingException?: LicenseException;
-    message?: string;
-    static fromJson(jsonObject?: any): InitException | undefined;
-}
-export declare class LicenseException {
-    errorCode?: number;
-    message?: string;
-    static fromJson(jsonObject?: any): LicenseException | undefined;
-}
-export declare class LivenessErrorException {
-    errorCode?: number;
-    underlyingException?: LivenessBackendException;
-    message?: string;
-    static fromJson(jsonObject?: any): LivenessErrorException | undefined;
-}
-export declare class LivenessBackendException {
-    errorCode?: number;
-    message?: string;
-    static fromJson(jsonObject?: any): LivenessBackendException | undefined;
-}
-export declare class MatchFacesException {
-    errorCode?: number;
-    message?: string;
-    detailedErrorMessage?: string;
-    static fromJson(jsonObject?: any): MatchFacesException | undefined;
-}
-export declare class DetectFacesErrorException {
-    errorCode?: number;
-    underlyingException?: DetectFacesBackendException;
-    message?: string;
-    static fromJson(jsonObject?: any): DetectFacesErrorException | undefined;
-}
-export declare class DetectFacesBackendException {
-    errorCode?: number;
-    message?: string;
-    static fromJson(jsonObject?: any): DetectFacesBackendException | undefined;
+export declare class FaceCaptureImage {
+    imageType?: number;
+    image?: string;
+    tag?: string;
+    static fromJson(jsonObject?: any): FaceCaptureImage | undefined;
 }
 export declare class FaceCaptureResponse {
-    exception?: FaceCaptureException;
-    image?: Image;
+    error?: FaceCaptureException;
+    image?: FaceCaptureImage;
     static fromJson(jsonObject?: any): FaceCaptureResponse | undefined;
 }
-export declare class LivenessResponse {
-    bitmap?: string;
-    liveness?: string;
-    tag?: string;
-    transactionId?: string;
-    estimatedAge?: number;
-    exception?: LivenessErrorException;
-    static fromJson(jsonObject?: any): LivenessResponse | undefined;
+export declare class OutputImageCrop {
+    type?: number;
+    size?: Size;
+    padColor?: number;
+    returnOriginalRect?: boolean;
+    static fromJson(jsonObject?: any): OutputImageCrop | undefined;
 }
-export declare class MatchFacesResponse {
-    tag?: string;
-    exception?: MatchFacesException;
-    detections?: MatchFacesDetection[];
-    results?: MatchFacesComparedFacesPair[];
-    static fromJson(jsonObject?: any): MatchFacesResponse | undefined;
-}
-export declare class Image {
-    imageType?: number;
-    bitmap?: string;
-    tag?: string;
-    imageData?: string;
-    static fromJson(jsonObject?: any): Image | undefined;
-}
-export declare class MatchFacesRequest {
-    images?: MatchFacesImage[];
-    customMetadata?: any;
-    tag?: string;
-    outputImageParams?: OutputImageParams;
-    static fromJson(jsonObject?: any): MatchFacesRequest | undefined;
-}
-export declare class MatchFacesImage {
-    imageType?: number;
-    detectAll?: boolean;
-    bitmap?: string;
-    identifier?: string;
-    static fromJson(jsonObject?: any): MatchFacesImage | undefined;
-}
-export declare class MatchFacesComparedFacesPair {
-    first?: MatchFacesComparedFace;
-    second?: MatchFacesComparedFace;
-    similarity?: number;
-    score?: number;
-    exception?: MatchFacesException;
-    static fromJson(jsonObject?: any): MatchFacesComparedFacesPair | undefined;
-}
-export declare class MatchFacesComparedFace {
-    face?: MatchFacesDetectionFace;
-    image?: MatchFacesImage;
-    faceIndex?: number;
-    imageIndex?: number;
-    static fromJson(jsonObject?: any): MatchFacesComparedFace | undefined;
-}
-export declare class MatchFacesDetectionFace {
-    faceIndex?: number;
-    rotationAngle?: number;
-    landmarks?: Point[];
-    faceRect?: Rect;
-    originalRect?: Rect;
-    crop?: string;
-    static fromJson(jsonObject?: any): MatchFacesDetectionFace | undefined;
-}
-export declare class MatchFacesDetection {
-    image?: MatchFacesImage;
-    imageIndex?: number;
-    faces?: MatchFacesDetectionFace[];
-    exception?: MatchFacesException;
-    static fromJson(jsonObject?: any): MatchFacesDetection | undefined;
+export declare class OutputImageParams {
+    backgroundColor?: number;
+    crop?: OutputImageCrop;
+    static fromJson(jsonObject?: any): OutputImageParams | undefined;
 }
 export declare class Point {
     x?: number;
@@ -128,40 +115,14 @@ export declare class Rect {
     right?: number;
     static fromJson(jsonObject?: any): Rect | undefined;
 }
-export declare class MatchFacesSimilarityThresholdSplit {
-    matchedFaces?: MatchFacesComparedFacesPair[];
-    unmatchedFaces?: MatchFacesComparedFacesPair[];
-    static fromJson(jsonObject?: any): MatchFacesSimilarityThresholdSplit | undefined;
-}
-export declare class DetectFacesRequest {
-    tag?: string;
-    scenario?: string;
-    image?: string;
-    configuration?: DetectFacesConfiguration;
-    static fromJson(jsonObject?: any): DetectFacesRequest | undefined;
-}
-export declare class DetectFacesConfiguration {
-    attributes?: string[];
-    customQuality?: ImageQualityCharacteristic[];
-    outputImageParams?: OutputImageParams;
-    onlyCentralFace?: boolean;
-    static fromJson(jsonObject?: any): DetectFacesConfiguration | undefined;
-}
-export declare class OutputImageParams {
-    backgroundColor?: string;
-    crop?: OutputImageCrop;
-    static fromJson(jsonObject?: any): OutputImageParams | undefined;
-}
-export declare class OutputImageCrop {
-    type?: number;
-    size?: Size;
-    padColor?: string;
-    returnOriginalRect?: boolean;
-    static fromJson(jsonObject?: any): OutputImageCrop | undefined;
+export declare class Size {
+    width?: number;
+    height?: number;
+    static fromJson(jsonObject?: any): Size | undefined;
 }
 export declare class ImageQualityCharacteristic {
     characteristicName?: string;
-    imageQualityGroup?: number;
+    color?: number;
     recommendedRange?: ImageQualityRange;
     customRange?: ImageQualityRange;
     static fromJson(jsonObject?: any): ImageQualityCharacteristic | undefined;
@@ -171,28 +132,6 @@ export declare class ImageQualityRange {
     max?: number;
     static fromJson(jsonObject?: any): ImageQualityRange | undefined;
 }
-export declare class Size {
-    width?: number;
-    height?: number;
-    static fromJson(jsonObject?: any): Size | undefined;
-}
-export declare class DetectFacesResponse {
-    detection?: DetectFaceResult;
-    scenario?: string;
-    error?: DetectFacesErrorException;
-    allDetections?: DetectFaceResult[];
-    static fromJson(jsonObject?: any): DetectFacesResponse | undefined;
-}
-export declare class DetectFaceResult {
-    quality?: ImageQualityResult[];
-    attributes?: DetectFacesAttributeResult[];
-    landmarks?: Point[];
-    crop?: string;
-    faceRect?: Rect;
-    originalRect?: Rect;
-    isQualityCompliant?: boolean;
-    static fromJson(jsonObject?: any): DetectFaceResult | undefined;
-}
 export declare class ImageQualityResult {
     name?: string;
     group?: number;
@@ -201,23 +140,148 @@ export declare class ImageQualityResult {
     value?: number;
     static fromJson(jsonObject?: any): ImageQualityResult | undefined;
 }
-export declare class DetectFacesAttributeResult {
-    attribute?: string;
-    value?: string;
-    range?: ImageQualityRange;
-    confidence?: number;
-    static fromJson(jsonObject?: any): DetectFacesAttributeResult | undefined;
+export declare class FaceSDKVersion {
+    api?: string;
+    core?: string;
+    coreMode?: string;
+    static fromJson(jsonObject?: any): FaceSDKVersion | undefined;
 }
-export declare class Font {
-    name?: string;
-    style?: number;
-    size?: number;
-    static fromJson(jsonObject?: any): Font | undefined;
+export declare class InitConfig {
+    license?: string;
+    licenseUpdate?: boolean;
+    static fromJson(jsonObject?: any): InitConfig | undefined;
+}
+export declare class InitException {
+    code?: number;
+    message?: string;
+    underlyingError?: UnderlyingException;
+    static fromJson(jsonObject?: any): InitException | undefined;
+}
+export declare class LivenessConfig {
+    copyright?: boolean;
+    cameraSwitchEnabled?: boolean;
+    closeButtonEnabled?: boolean;
+    torchButtonEnabled?: boolean;
+    vibrateOnSteps?: boolean;
+    cameraPositionAndroid?: number;
+    cameraPositionIOS?: number;
+    screenOrientation?: number[];
+    locationTrackingEnabled?: boolean;
+    attemptsCount?: number;
+    recordingProcess?: number;
+    livenessType?: number;
+    tag?: string;
+    skipStep?: number[];
+    metadata?: any;
+    static fromJson(jsonObject?: any): LivenessConfig | undefined;
+}
+export declare class LivenessException {
+    code?: number;
+    message?: string;
+    underlyingError?: UnderlyingException;
+    static fromJson(jsonObject?: any): LivenessException | undefined;
+}
+export declare class LivenessNotification {
+    status?: number;
+    response?: LivenessResponse;
+    static fromJson(jsonObject?: any): LivenessNotification | undefined;
+}
+export declare class LivenessResponse {
+    image?: string;
+    liveness?: number;
+    tag?: string;
+    transactionId?: string;
+    estimatedAge?: number;
+    error?: LivenessException;
+    static fromJson(jsonObject?: any): LivenessResponse | undefined;
+}
+export declare class ComparedFace {
+    imageIndex?: number;
+    image?: MatchFacesImage;
+    faceIndex?: number;
+    face?: MatchFacesDetectionFace;
+    static fromJson(jsonObject?: any): ComparedFace | undefined;
+}
+export declare class ComparedFacesPair {
+    first?: ComparedFace;
+    second?: ComparedFace;
+    similarity?: number;
+    score?: number;
+    error?: MatchFacesException;
+    static fromJson(jsonObject?: any): ComparedFacesPair | undefined;
+}
+export declare class ComparedFacesSplit {
+    matchedFaces?: ComparedFacesPair[];
+    unmatchedFaces?: ComparedFacesPair[];
+    static fromJson(jsonObject?: any): ComparedFacesSplit | undefined;
+}
+export declare class MatchFacesConfig {
+    processingMode?: number;
+    static fromJson(jsonObject?: any): MatchFacesConfig | undefined;
+}
+export declare class MatchFacesDetection {
+    imageIndex?: number;
+    image?: MatchFacesImage;
+    faces?: MatchFacesDetectionFace[];
+    error?: MatchFacesException;
+    static fromJson(jsonObject?: any): MatchFacesDetection | undefined;
+}
+export declare class MatchFacesDetectionFace {
+    faceIndex?: number;
+    landmarks?: Point[];
+    faceRect?: Rect;
+    rotationAngle?: number;
+    originalRect?: Rect;
+    crop?: string;
+    static fromJson(jsonObject?: any): MatchFacesDetectionFace | undefined;
+}
+export declare class MatchFacesException {
+    code?: number;
+    message?: string;
+    underlyingError?: UnderlyingException;
+    static fromJson(jsonObject?: any): MatchFacesException | undefined;
+}
+export declare class MatchFacesImage {
+    image?: string;
+    imageType?: number;
+    detectAll?: boolean;
+    identifier?: string;
+    static fromJson(jsonObject?: any): MatchFacesImage | undefined;
+}
+export declare class MatchFacesRequest {
+    images?: MatchFacesImage[];
+    outputImageParams?: OutputImageParams;
+    tag?: string;
+    metadata?: any;
+    static fromJson(jsonObject?: any): MatchFacesRequest | undefined;
+}
+export declare class MatchFacesResponse {
+    results?: ComparedFacesPair[];
+    detections?: MatchFacesDetection[];
+    tag?: string;
+    error?: MatchFacesException;
+    static fromJson(jsonObject?: any): MatchFacesResponse | undefined;
+}
+export declare class EditGroupPersonsRequest {
+    personIdsToAdd?: string[];
+    personIdsToRemove?: string[];
+    static fromJson(jsonObject?: any): EditGroupPersonsRequest | undefined;
+}
+export declare class ImageUpload {
+    imageData?: string;
+    imageUrl?: string;
+    static fromJson(jsonObject?: any): ImageUpload | undefined;
+}
+export declare class PageableItemList {
+    items?: any[];
+    page?: number;
+    totalPages?: number;
+    static fromJson(jsonObject?: any): PageableItemList | undefined;
 }
 export declare class Person {
     name?: string;
-    groups?: string[];
     updatedAt?: string;
+    groups?: string[];
     id?: string;
     metadata?: any;
     createdAt?: string;
@@ -239,35 +303,23 @@ export declare class PersonImage {
     createdAt?: string;
     static fromJson(jsonObject?: any): PersonImage | undefined;
 }
-export declare class ImageUpload {
-    imageData?: string;
-    imageUrl?: string;
-    static fromJson(jsonObject?: any): ImageUpload | undefined;
-}
-export declare class EditGroupPersonsRequest {
-    personIdsToAdd?: string[];
-    personIdsToRemove?: string[];
-    static fromJson(jsonObject?: any): EditGroupPersonsRequest | undefined;
-}
-export declare class SearchPersonRequest {
-    outputImageParams?: OutputImageParams;
-    groupIdsForSearch?: string[];
-    threshold?: number;
-    limit?: number;
-    imageUpload?: ImageUpload;
-    detectAll?: boolean;
-    static fromJson(jsonObject?: any): SearchPersonRequest | undefined;
-}
 export declare class SearchPerson {
-    detection?: SearchPersonDetection;
     images?: SearchPersonImage[];
+    detection?: SearchPersonDetection;
     name?: string;
-    groups?: string[];
     updatedAt?: string;
+    groups?: string[];
     id?: string;
     metadata?: any;
     createdAt?: string;
     static fromJson(jsonObject?: any): SearchPerson | undefined;
+}
+export declare class SearchPersonDetection {
+    landmarks?: Point[];
+    rect?: Rect;
+    crop?: string;
+    rotationAngle?: number;
+    static fromJson(jsonObject?: any): SearchPersonDetection | undefined;
 }
 export declare class SearchPersonImage {
     similarity?: number;
@@ -280,32 +332,29 @@ export declare class SearchPersonImage {
     createdAt?: string;
     static fromJson(jsonObject?: any): SearchPersonImage | undefined;
 }
-export declare class SearchPersonDetection {
-    landmarks?: Point[];
-    rect?: Rect;
-    cropImage?: string;
-    rotationAngle?: number;
-    static fromJson(jsonObject?: any): SearchPersonDetection | undefined;
+export declare class SearchPersonRequest {
+    imageUpload?: ImageUpload;
+    groupIdsForSearch?: string[];
+    threshold?: number;
+    limit?: number;
+    detectAll?: boolean;
+    outputImageParams?: OutputImageParams;
+    static fromJson(jsonObject?: any): SearchPersonRequest | undefined;
 }
-export declare class LivenessNotification {
-    status?: string;
-    response?: LivenessResponse;
-    static fromJson(jsonObject?: any): LivenessNotification | undefined;
+export declare class InitResponse {
+    success?: boolean;
+    error?: InitException;
+    static fromJson(jsonObject?: any): InitResponse | undefined;
 }
 export declare class VideoEncoderCompletion {
     success?: boolean;
     transactionId?: string;
     static fromJson(jsonObject?: any): VideoEncoderCompletion | undefined;
 }
-export declare class InitializationConfiguration {
-    license?: string;
-    licenseUpdate?: boolean;
-    static fromJson(jsonObject?: any): InitializationConfiguration | undefined;
-}
-export declare class InitResponse {
-    success?: boolean;
-    error?: InitException;
-    static fromJson(jsonObject?: any): InitResponse | undefined;
+export declare class PersonDBResponse {
+    data?: any;
+    error?: string;
+    static fromJson(jsonObject?: any): PersonDBResponse | undefined;
 }
 export declare const FontStyle: {
     NORMAL: number;
@@ -314,32 +363,32 @@ export declare const FontStyle: {
     BOLD_ITALIC: number;
 };
 export declare const CustomizationColor: {
-    ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: string;
-    ONBOARDING_SCREEN_START_BUTTON_TITLE: string;
-    ONBOARDING_SCREEN_BACKGROUND: string;
-    ONBOARDING_SCREEN_TITLE_LABEL_TEXT: string;
-    ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: string;
-    ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: string;
-    CAMERA_SCREEN_STROKE_NORMAL: string;
-    CAMERA_SCREEN_STROKE_ACTIVE: string;
-    CAMERA_SCREEN_SECTOR_TARGET: string;
-    CAMERA_SCREEN_SECTOR_ACTIVE: string;
-    CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: string;
-    CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: string;
-    CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: string;
-    CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: string;
-    CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: string;
-    CAMERA_SCREEN_DARK_TOOLBAR_TINT: string;
-    RETRY_SCREEN_BACKGROUND: string;
-    RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: string;
-    RETRY_SCREEN_RETRY_BUTTON_TITLE: string;
-    RETRY_SCREEN_TITLE_LABEL_TEXT: string;
-    RETRY_SCREEN_SUBTITLE_LABEL_TEXT: string;
-    RETRY_SCREEN_HINT_LABELS_TEXT: string;
-    PROCESSING_SCREEN_BACKGROUND: string;
-    PROCESSING_SCREEN_PROGRESS: string;
-    PROCESSING_SCREEN_TITLE: string;
-    SUCCESS_SCREEN_BACKGROUND: string;
+    ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: number;
+    ONBOARDING_SCREEN_START_BUTTON_TITLE: number;
+    ONBOARDING_SCREEN_BACKGROUND: number;
+    ONBOARDING_SCREEN_TITLE_LABEL_TEXT: number;
+    ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: number;
+    ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: number;
+    CAMERA_SCREEN_STROKE_NORMAL: number;
+    CAMERA_SCREEN_STROKE_ACTIVE: number;
+    CAMERA_SCREEN_SECTOR_TARGET: number;
+    CAMERA_SCREEN_SECTOR_ACTIVE: number;
+    CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: number;
+    CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: number;
+    CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: number;
+    CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: number;
+    CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: number;
+    CAMERA_SCREEN_DARK_TOOLBAR_TINT: number;
+    RETRY_SCREEN_BACKGROUND: number;
+    RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: number;
+    RETRY_SCREEN_RETRY_BUTTON_TITLE: number;
+    RETRY_SCREEN_TITLE_LABEL_TEXT: number;
+    RETRY_SCREEN_SUBTITLE_LABEL_TEXT: number;
+    RETRY_SCREEN_HINT_LABELS_TEXT: number;
+    PROCESSING_SCREEN_BACKGROUND: number;
+    PROCESSING_SCREEN_PROGRESS: number;
+    PROCESSING_SCREEN_TITLE: number;
+    SUCCESS_SCREEN_BACKGROUND: number;
 };
 export declare const ImageQualityGroupName: {
     IMAGE_CHARACTERISTICS: number;
@@ -377,6 +426,10 @@ export declare const DetectFacesErrorCode: {
     REQUEST_FAILED: number;
     API_CALL_FAILED: number;
 };
+export declare const CameraPosition: {
+    FRONT: number;
+    BACK: number;
+};
 export declare const InitErrorCode: {
     IN_PROGRESS_ALREADY: number;
     MISSING_CORE: number;
@@ -388,12 +441,8 @@ export declare const InitErrorCode: {
     LICENSE_IS_NULL: number;
 };
 export declare const LivenessStatus: {
-    PASSED: string;
-    UNKNOWN: string;
-};
-export declare const CameraErrorCode: {
-    CAMERA_NOT_AVAILABLE: string;
-    CAMERA_NO_PERMISSION: string;
+    PASSED: number;
+    UNKNOWN: number;
 };
 export declare const LivenessErrorCode: {
     NOT_INITIALIZED: number;
@@ -412,9 +461,9 @@ export declare const LivenessErrorCode: {
     CAMERA_NOT_AVAILABLE: number;
 };
 export declare const RecordingProcess: {
-    ASYNCHRONOUS_UPLOAD: string;
-    SYNCHRONOUS_UPLOAD: string;
-    NOT_UPLOAD: string;
+    ASYNCHRONOUS_UPLOAD: number;
+    SYNCHRONOUS_UPLOAD: number;
+    NOT_UPLOAD: number;
 };
 export declare const DetectFacesBackendErrorCode: {
     FR_FACE_NOT_DETECTED: number;
@@ -497,22 +546,17 @@ export declare const ScreenOrientation: {
     PORTRAIT: number;
     LANDSCAPE: number;
 };
-export declare const ButtonTag: {
-    CLOSE: number;
-    TORCH: number;
-    CAMERA_SWITCH: number;
-};
 export declare const CustomizationFont: {
-    ONBOARDING_SCREEN_START_BUTTON: string;
-    ONBOARDING_SCREEN_TITLE_LABEL: string;
-    ONBOARDING_SCREEN_SUBTITLE_LABEL: string;
-    ONBOARDING_SCREEN_MESSAGE_LABELS: string;
-    CAMERA_SCREEN_HINT_LABEL: string;
-    RETRY_SCREEN_RETRY_BUTTON: string;
-    RETRY_SCREEN_TITLE_LABEL: string;
-    RETRY_SCREEN_SUBTITLE_LABEL: string;
-    RETRY_SCREEN_HINT_LABELS: string;
-    PROCESSING_SCREEN: string;
+    ONBOARDING_SCREEN_START_BUTTON: number;
+    ONBOARDING_SCREEN_TITLE_LABEL: number;
+    ONBOARDING_SCREEN_SUBTITLE_LABEL: number;
+    ONBOARDING_SCREEN_MESSAGE_LABELS: number;
+    CAMERA_SCREEN_HINT_LABEL: number;
+    RETRY_SCREEN_RETRY_BUTTON: number;
+    RETRY_SCREEN_TITLE_LABEL: number;
+    RETRY_SCREEN_SUBTITLE_LABEL: number;
+    RETRY_SCREEN_HINT_LABELS: number;
+    PROCESSING_SCREEN: number;
 };
 export declare const DetectFacesScenario: {
     CROP_CENTRAL_FACE: string;
@@ -525,21 +569,21 @@ export declare const DetectFacesScenario: {
     QUALITY_VISA_USA: string;
 };
 export declare const LivenessProcessStatus: {
-    START: string;
-    PREPARING: string;
-    NEW_SESSION: string;
-    NEXT_STAGE: string;
-    SECTOR_CHANGED: string;
-    PROGRESS: string;
-    LOW_BRIGHTNESS: string;
-    FIT_FACE: string;
-    MOVE_AWAY: string;
-    MOVE_CLOSER: string;
-    TURN_HEAD: string;
-    PROCESSING: string;
-    FAILED: string;
-    RETRY: string;
-    SUCCESS: string;
+    START: number;
+    PREPARING: number;
+    NEW_SESSION: number;
+    NEXT_STAGE: number;
+    SECTOR_CHANGED: number;
+    PROGRESS: number;
+    LOW_BRIGHTNESS: number;
+    FIT_FACE: number;
+    MOVE_AWAY: number;
+    MOVE_CLOSER: number;
+    TURN_HEAD: number;
+    PROCESSING: number;
+    FAILED: number;
+    RETRY: number;
+    SUCCESS: number;
 };
 export declare const OutputImageCropAspectRatio: {
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: number;
@@ -549,8 +593,8 @@ export declare const OutputImageCropAspectRatio: {
     OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
 };
 export declare const LivenessType: {
-    ACTIVE: string;
-    PASSIVE: string;
+    ACTIVE: number;
+    PASSIVE: number;
 };
 export declare const LivenessSkipStep: {
     ONBOARDING_STEP: number;
@@ -604,23 +648,23 @@ export declare const LivenessBackendErrorCode: {
     WRONG_VIEW: number;
 };
 export declare const ProcessingMode: {
-    ONLINE: string;
-    OFFLINE: string;
+    ONLINE: number;
+    OFFLINE: number;
 };
 export declare const CustomizationImage: {
-    ONBOARDING_SCREEN_CLOSE_BUTTON: string;
-    ONBOARDING_SCREEN_ILLUMINATION: string;
-    ONBOARDING_SCREEN_ACCESSORIES: string;
-    ONBOARDING_SCREEN_CAMERA_LEVEL: string;
-    CAMERA_SCREEN_CLOSE_BUTTON: string;
-    CAMERA_SCREEN_LIGHT_ON_BUTTON: string;
-    CAMERA_SCREEN_LIGHT_OFF_BUTTON: string;
-    CAMERA_SCREEN_SWITCH_BUTTON: string;
-    RETRY_SCREEN_CLOSE_BUTTON: string;
-    RETRY_SCREEN_HINT_ENVIRONMENT: string;
-    RETRY_SCREEN_HINT_SUBJECT: string;
-    PROCESSING_SCREEN_CLOSE_BUTTON: string;
-    SUCCESS_SCREEN_IMAGE: string;
+    ONBOARDING_SCREEN_CLOSE_BUTTON: number;
+    ONBOARDING_SCREEN_ILLUMINATION: number;
+    ONBOARDING_SCREEN_ACCESSORIES: number;
+    ONBOARDING_SCREEN_CAMERA_LEVEL: number;
+    CAMERA_SCREEN_CLOSE_BUTTON: number;
+    CAMERA_SCREEN_LIGHT_ON_BUTTON: number;
+    CAMERA_SCREEN_LIGHT_OFF_BUTTON: number;
+    CAMERA_SCREEN_SWITCH_BUTTON: number;
+    RETRY_SCREEN_CLOSE_BUTTON: number;
+    RETRY_SCREEN_HINT_ENVIRONMENT: number;
+    RETRY_SCREEN_HINT_SUBJECT: number;
+    PROCESSING_SCREEN_CLOSE_BUTTON: number;
+    SUCCESS_SCREEN_IMAGE: number;
 };
 export declare const DetectFacesAttribute: {
     AGE: string;
@@ -645,32 +689,32 @@ export declare const Enum: {
         BOLD_ITALIC: number;
     };
     CustomizationColor: {
-        ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: string;
-        ONBOARDING_SCREEN_START_BUTTON_TITLE: string;
-        ONBOARDING_SCREEN_BACKGROUND: string;
-        ONBOARDING_SCREEN_TITLE_LABEL_TEXT: string;
-        ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: string;
-        ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: string;
-        CAMERA_SCREEN_STROKE_NORMAL: string;
-        CAMERA_SCREEN_STROKE_ACTIVE: string;
-        CAMERA_SCREEN_SECTOR_TARGET: string;
-        CAMERA_SCREEN_SECTOR_ACTIVE: string;
-        CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: string;
-        CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: string;
-        CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: string;
-        CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: string;
-        CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: string;
-        CAMERA_SCREEN_DARK_TOOLBAR_TINT: string;
-        RETRY_SCREEN_BACKGROUND: string;
-        RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: string;
-        RETRY_SCREEN_RETRY_BUTTON_TITLE: string;
-        RETRY_SCREEN_TITLE_LABEL_TEXT: string;
-        RETRY_SCREEN_SUBTITLE_LABEL_TEXT: string;
-        RETRY_SCREEN_HINT_LABELS_TEXT: string;
-        PROCESSING_SCREEN_BACKGROUND: string;
-        PROCESSING_SCREEN_PROGRESS: string;
-        PROCESSING_SCREEN_TITLE: string;
-        SUCCESS_SCREEN_BACKGROUND: string;
+        ONBOARDING_SCREEN_START_BUTTON_BACKGROUND: number;
+        ONBOARDING_SCREEN_START_BUTTON_TITLE: number;
+        ONBOARDING_SCREEN_BACKGROUND: number;
+        ONBOARDING_SCREEN_TITLE_LABEL_TEXT: number;
+        ONBOARDING_SCREEN_SUBTITLE_LABEL_TEXT: number;
+        ONBOARDING_SCREEN_MESSAGE_LABELS_TEXT: number;
+        CAMERA_SCREEN_STROKE_NORMAL: number;
+        CAMERA_SCREEN_STROKE_ACTIVE: number;
+        CAMERA_SCREEN_SECTOR_TARGET: number;
+        CAMERA_SCREEN_SECTOR_ACTIVE: number;
+        CAMERA_SCREEN_FRONT_HINT_LABEL_BACKGROUND: number;
+        CAMERA_SCREEN_FRONT_HINT_LABEL_TEXT: number;
+        CAMERA_SCREEN_BACK_HINT_LABEL_BACKGROUND: number;
+        CAMERA_SCREEN_BACK_HINT_LABEL_TEXT: number;
+        CAMERA_SCREEN_LIGHT_TOOLBAR_TINT: number;
+        CAMERA_SCREEN_DARK_TOOLBAR_TINT: number;
+        RETRY_SCREEN_BACKGROUND: number;
+        RETRY_SCREEN_RETRY_BUTTON_BACKGROUND: number;
+        RETRY_SCREEN_RETRY_BUTTON_TITLE: number;
+        RETRY_SCREEN_TITLE_LABEL_TEXT: number;
+        RETRY_SCREEN_SUBTITLE_LABEL_TEXT: number;
+        RETRY_SCREEN_HINT_LABELS_TEXT: number;
+        PROCESSING_SCREEN_BACKGROUND: number;
+        PROCESSING_SCREEN_PROGRESS: number;
+        PROCESSING_SCREEN_TITLE: number;
+        SUCCESS_SCREEN_BACKGROUND: number;
     };
     ImageQualityGroupName: {
         IMAGE_CHARACTERISTICS: number;
@@ -708,6 +752,10 @@ export declare const Enum: {
         REQUEST_FAILED: number;
         API_CALL_FAILED: number;
     };
+    CameraPosition: {
+        FRONT: number;
+        BACK: number;
+    };
     InitErrorCode: {
         IN_PROGRESS_ALREADY: number;
         MISSING_CORE: number;
@@ -719,12 +767,8 @@ export declare const Enum: {
         LICENSE_IS_NULL: number;
     };
     LivenessStatus: {
-        PASSED: string;
-        UNKNOWN: string;
-    };
-    CameraErrorCode: {
-        CAMERA_NOT_AVAILABLE: string;
-        CAMERA_NO_PERMISSION: string;
+        PASSED: number;
+        UNKNOWN: number;
     };
     LivenessErrorCode: {
         NOT_INITIALIZED: number;
@@ -743,9 +787,9 @@ export declare const Enum: {
         CAMERA_NOT_AVAILABLE: number;
     };
     RecordingProcess: {
-        ASYNCHRONOUS_UPLOAD: string;
-        SYNCHRONOUS_UPLOAD: string;
-        NOT_UPLOAD: string;
+        ASYNCHRONOUS_UPLOAD: number;
+        SYNCHRONOUS_UPLOAD: number;
+        NOT_UPLOAD: number;
     };
     DetectFacesBackendErrorCode: {
         FR_FACE_NOT_DETECTED: number;
@@ -828,22 +872,17 @@ export declare const Enum: {
         PORTRAIT: number;
         LANDSCAPE: number;
     };
-    ButtonTag: {
-        CLOSE: number;
-        TORCH: number;
-        CAMERA_SWITCH: number;
-    };
     CustomizationFont: {
-        ONBOARDING_SCREEN_START_BUTTON: string;
-        ONBOARDING_SCREEN_TITLE_LABEL: string;
-        ONBOARDING_SCREEN_SUBTITLE_LABEL: string;
-        ONBOARDING_SCREEN_MESSAGE_LABELS: string;
-        CAMERA_SCREEN_HINT_LABEL: string;
-        RETRY_SCREEN_RETRY_BUTTON: string;
-        RETRY_SCREEN_TITLE_LABEL: string;
-        RETRY_SCREEN_SUBTITLE_LABEL: string;
-        RETRY_SCREEN_HINT_LABELS: string;
-        PROCESSING_SCREEN: string;
+        ONBOARDING_SCREEN_START_BUTTON: number;
+        ONBOARDING_SCREEN_TITLE_LABEL: number;
+        ONBOARDING_SCREEN_SUBTITLE_LABEL: number;
+        ONBOARDING_SCREEN_MESSAGE_LABELS: number;
+        CAMERA_SCREEN_HINT_LABEL: number;
+        RETRY_SCREEN_RETRY_BUTTON: number;
+        RETRY_SCREEN_TITLE_LABEL: number;
+        RETRY_SCREEN_SUBTITLE_LABEL: number;
+        RETRY_SCREEN_HINT_LABELS: number;
+        PROCESSING_SCREEN: number;
     };
     DetectFacesScenario: {
         CROP_CENTRAL_FACE: string;
@@ -856,21 +895,21 @@ export declare const Enum: {
         QUALITY_VISA_USA: string;
     };
     LivenessProcessStatus: {
-        START: string;
-        PREPARING: string;
-        NEW_SESSION: string;
-        NEXT_STAGE: string;
-        SECTOR_CHANGED: string;
-        PROGRESS: string;
-        LOW_BRIGHTNESS: string;
-        FIT_FACE: string;
-        MOVE_AWAY: string;
-        MOVE_CLOSER: string;
-        TURN_HEAD: string;
-        PROCESSING: string;
-        FAILED: string;
-        RETRY: string;
-        SUCCESS: string;
+        START: number;
+        PREPARING: number;
+        NEW_SESSION: number;
+        NEXT_STAGE: number;
+        SECTOR_CHANGED: number;
+        PROGRESS: number;
+        LOW_BRIGHTNESS: number;
+        FIT_FACE: number;
+        MOVE_AWAY: number;
+        MOVE_CLOSER: number;
+        TURN_HEAD: number;
+        PROCESSING: number;
+        FAILED: number;
+        RETRY: number;
+        SUCCESS: number;
     };
     OutputImageCropAspectRatio: {
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_3X4: number;
@@ -880,8 +919,8 @@ export declare const Enum: {
         OUTPUT_IMAGE_CROP_ASPECT_RATIO_7X9: number;
     };
     LivenessType: {
-        ACTIVE: string;
-        PASSIVE: string;
+        ACTIVE: number;
+        PASSIVE: number;
     };
     LivenessSkipStep: {
         ONBOARDING_STEP: number;
@@ -935,23 +974,23 @@ export declare const Enum: {
         WRONG_VIEW: number;
     };
     ProcessingMode: {
-        ONLINE: string;
-        OFFLINE: string;
+        ONLINE: number;
+        OFFLINE: number;
     };
     CustomizationImage: {
-        ONBOARDING_SCREEN_CLOSE_BUTTON: string;
-        ONBOARDING_SCREEN_ILLUMINATION: string;
-        ONBOARDING_SCREEN_ACCESSORIES: string;
-        ONBOARDING_SCREEN_CAMERA_LEVEL: string;
-        CAMERA_SCREEN_CLOSE_BUTTON: string;
-        CAMERA_SCREEN_LIGHT_ON_BUTTON: string;
-        CAMERA_SCREEN_LIGHT_OFF_BUTTON: string;
-        CAMERA_SCREEN_SWITCH_BUTTON: string;
-        RETRY_SCREEN_CLOSE_BUTTON: string;
-        RETRY_SCREEN_HINT_ENVIRONMENT: string;
-        RETRY_SCREEN_HINT_SUBJECT: string;
-        PROCESSING_SCREEN_CLOSE_BUTTON: string;
-        SUCCESS_SCREEN_IMAGE: string;
+        ONBOARDING_SCREEN_CLOSE_BUTTON: number;
+        ONBOARDING_SCREEN_ILLUMINATION: number;
+        ONBOARDING_SCREEN_ACCESSORIES: number;
+        ONBOARDING_SCREEN_CAMERA_LEVEL: number;
+        CAMERA_SCREEN_CLOSE_BUTTON: number;
+        CAMERA_SCREEN_LIGHT_ON_BUTTON: number;
+        CAMERA_SCREEN_LIGHT_OFF_BUTTON: number;
+        CAMERA_SCREEN_SWITCH_BUTTON: number;
+        RETRY_SCREEN_CLOSE_BUTTON: number;
+        RETRY_SCREEN_HINT_ENVIRONMENT: number;
+        RETRY_SCREEN_HINT_SUBJECT: number;
+        PROCESSING_SCREEN_CLOSE_BUTTON: number;
+        SUCCESS_SCREEN_IMAGE: number;
     };
     DetectFacesAttribute: {
         AGE: string;
@@ -988,358 +1027,271 @@ export declare const Enum: {
  */
 export declare class FaceSDK extends AwesomeCordovaNativePlugin {
     /**
-     *  description
+     *
+     *
+     * @return {Promise<any>} Returns a promise
+     */
+    getVersion(): Promise<any>;
+    /**
+     *
      *
      * @return {Promise<any>} Returns a promise
      */
     getServiceUrl(): Promise<any>;
     /**
-     *  description
      *
+     *
+     * @param {string} url
      * @return {Promise<any>} Returns a promise
      */
-    startLiveness(): Promise<any>;
+    setServiceUrl(url: string | null): Promise<any>;
     /**
-     *  description
      *
+     *
+     * @param {Record<string, string>} dictionary
      * @return {Promise<any>} Returns a promise
      */
-    getFaceSdkVersion(): Promise<any>;
+    setLocalizationDictionary(dictionary: Record<string, string>): Promise<any>;
     /**
-     *  description
+     *  sets headers for http request
      *
+     * @param {Record<string, string>} headers
      * @return {Promise<any>} Returns a promise
      */
-    presentFaceCaptureActivity(): Promise<any>;
+    setRequestHeaders(headers: Record<string, string>): Promise<any>;
     /**
-     *  description
+     *  Use this method to set UiConfiguration
      *
+     * @param {Customization} config
      * @return {Promise<any>} Returns a promise
      */
-    stopFaceCaptureActivity(): Promise<any>;
+    setCustomization(config: Customization): Promise<any>;
     /**
-     *  description
      *
-     * @return {Promise<any>} Returns a promise
-     */
-    /**
-     * @deprecated
-     */
-    init(): Promise<any>;
-    /**
-     *  description
-     *
-     * @return {Promise<any>} Returns a promise
-     */
-    initialize(): Promise<any>;
-    /**
-     *  description
-     *
-     * @param {object} config String license - license base64
-     *  boolean licenseUpdate
-     * @return {Promise<any>} Returns a promise
-     */
-    initializeWithConfig(config: any): Promise<any>;
-    /**
-     *  description
-     *
-     * @return {Promise<any>} Returns a promise
-     */
-    /**
-     * @deprecated
-     */
-    deinit(): Promise<any>;
-    /**
-     *  description
-     *
-     * @return {Promise<any>} Returns a promise
-     */
-    deinitialize(): Promise<any>;
-    /**
-     *  description
      *
      * @return {Promise<any>} Returns a promise
      */
     isInitialized(): Promise<any>;
     /**
-     *  description
+     *
+     *
+     * @param {InitConfig} config
+     * @return {Promise<any>} Returns a promise
+     */
+    initialize(config: InitConfig | null): Promise<any>;
+    /**
+     *
      *
      * @return {Promise<any>} Returns a promise
      */
-    stopLivenessProcessing(): Promise<any>;
+    deinitialize(): Promise<any>;
     /**
-     *  sets headers for http request
      *
-     * @param {map} headers key - header name
-     *  value - header value
+     *
+     * @param {FaceCaptureConfig} config
      * @return {Promise<any>} Returns a promise
      */
-    setRequestHeaders(headers: any): Promise<any>;
+    startFaceCapture(config: FaceCaptureConfig | null): Observable<any>;
     /**
-     *  description
      *
-     * @param {object} config int cameraId - set camera on Android
-     *  CameraPosition cameraPositionIOS - set camera on iOS
-     *  boolean cameraSwitchEnabled
-     *  boolean showHelpTextAnimation
-     *  boolean forceToUseHuaweiVision
-     *  boolean closeButtonEnabled
-     *  boolean torchButtonEnabled
+     *
      * @return {Promise<any>} Returns a promise
      */
-    presentFaceCaptureActivityWithConfig(config: any): Promise<any>;
+    stopFaceCapture(): Promise<any>;
     /**
-     *  description
      *
-     * @param {MatchFacesRequest} request description
-     * @param {object} config ProcessingMode processingMode
+     *
+     * @param {LivenessConfig} config
      * @return {Promise<any>} Returns a promise
      */
-    matchFacesWithConfig(request: any, config: any): Promise<any>;
+    startLiveness(config: LivenessConfig | null): Observable<any>;
     /**
-     *  description
      *
-     * @param {object} config int cameraId - set camera on Android
-     *  CameraPosition cameraPositionIOS - set camera on iOS
-     *  boolean cameraSwitchEnabled
-     *  boolean showHelpTextAnimation
-     *  boolean locationTrackingEnabled
-     *  boolean forceToUseHuaweiVision
-     *  boolean closeButtonEnabled
-     *  boolean torchButtonEnabled
+     *
      * @return {Promise<any>} Returns a promise
      */
-    startLivenessWithConfig(config: any): Promise<any>;
+    stopLiveness(): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} url description
+     *
+     * @param {MatchFacesRequest} request
+     * @param {MatchFacesConfig} config
      * @return {Promise<any>} Returns a promise
      */
-    setServiceUrl(url: any): Promise<any>;
+    matchFaces(request: MatchFacesRequest, config: MatchFacesConfig | null): Promise<any>;
     /**
-     *  description
      *
-     * @param {boolean} isEnable description
+     *
+     * @param {ComparedFacesPair[]} facesPairs
+     * @param {number} similarityThreshold
      * @return {Promise<any>} Returns a promise
      */
-    setLogs(isEnable: any): Promise<any>;
+    splitComparedFaces(facesPairs: ComparedFacesPair[], similarityThreshold: number): Promise<any>;
     /**
-     *  description
      *
-     * @param {boolean} isSaveLog description
+     *
+     * @param {DetectFacesRequest} request
      * @return {Promise<any>} Returns a promise
      */
-    setSaveLogs(isSaveLog: any): Promise<any>;
+    detectFaces(request: DetectFacesRequest): Promise<any>;
     /**
-     *  description
      *
-     * @param {boolean} path description
+     *
+     * @param {string} name
+     * @param {string[]} groupIds
+     * @param {Record<string, any>} metadata
      * @return {Promise<any>} Returns a promise
      */
-    setLogsFolder(path: any): Promise<any>;
+    createPerson(name: string, groupIds: string[] | null, metadata: Record<string, any> | null): Promise<any>;
     /**
-     *  description
      *
-     * @param {MatchFacesRequest} request description
+     *
+     * @param {Person} person
      * @return {Promise<any>} Returns a promise
      */
-    matchFaces(request: any): Promise<any>;
+    updatePerson(person: Person): Promise<any>;
     /**
-     *  description
      *
-     * @param {DetectFacesRequest} request description
+     *
+     * @param {string} personId
      * @return {Promise<any>} Returns a promise
      */
-    detectFaces(request: any): Promise<any>;
+    deletePerson(personId: string): Promise<any>;
     /**
-     *  Use this method to set UICustomizationLayer
      *
-     * @param {object} json custom UI layer JSON
+     *
+     * @param {string} personId
      * @return {Promise<any>} Returns a promise
      */
-    setUiCustomizationLayer(json: any): Promise<any>;
+    getPerson(personId: string): Promise<any>;
     /**
-     *  Use this method to set UiConfiguration
      *
-     * @param {object} config UiConfiguration JSON
+     *
+     * @param {string} personId
+     * @param {ImageUpload} image
      * @return {Promise<any>} Returns a promise
      */
-    setUiConfiguration(config: any): Promise<any>;
+    addPersonImage(personId: string, image: ImageUpload): Promise<any>;
     /**
-     *  description
      *
-     * @param {object} dictionary description
+     *
+     * @param {string} personId
+     * @param {string} imageId
      * @return {Promise<any>} Returns a promise
      */
-    setLocalizationDictionary(dictionary: any): Promise<any>;
+    deletePersonImage(personId: string, imageId: string): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} faces facesArray: MatchFacesComparedFacesPair[]
-     *  faces = JSON.stringify(facesArray)
-     * @param {number} similarity description
+     *
+     * @param {string} personId
+     * @param {string} imageId
      * @return {Promise<any>} Returns a promise
      */
-    matchFacesSimilarityThresholdSplit(faces: any, similarity: any): Promise<any>;
+    getPersonImage(personId: string, imageId: string): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} personId description
+     *
+     * @param {string} personId
      * @return {Promise<any>} Returns a promise
      */
-    getPerson(personId: any): Promise<any>;
+    getPersonImages(personId: string): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} name description
-     * @param {array} groupIds description
-     * @param {object} metadata description
+     *
+     * @param {string} personId
+     * @param {number} page
+     * @param {number} size
      * @return {Promise<any>} Returns a promise
      */
-    createPerson(name: any, groupIds: any, metadata: any): Promise<any>;
+    getPersonImagesForPage(personId: string, page: number, size: number): Promise<any>;
     /**
-     *  description
      *
-     * @param {Person} person description
+     *
+     * @param {string} name
+     * @param {Record<string, any>} metadata
      * @return {Promise<any>} Returns a promise
      */
-    updatePerson(person: any): Promise<any>;
+    createGroup(name: string, metadata: Record<string, any> | null): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} personId description
+     *
+     * @param {PersonGroup} group
      * @return {Promise<any>} Returns a promise
      */
-    deletePerson(personId: any): Promise<any>;
+    updateGroup(group: PersonGroup): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} personId description
+     *
+     * @param {string} groupId
+     * @param {EditGroupPersonsRequest} editGroupPersonsRequest
      * @return {Promise<any>} Returns a promise
      */
-    getPersonImages(personId: any): Promise<any>;
+    editPersonsInGroup(groupId: string, editGroupPersonsRequest: EditGroupPersonsRequest): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} personId description
-     * @param {number} page description
-     * @param {number} size description
+     *
+     * @param {string} groupId
      * @return {Promise<any>} Returns a promise
      */
-    getPersonImagesForPage(personId: any, page: any, size: any): Promise<any>;
+    deleteGroup(groupId: string): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} personId description
-     * @param {ImageUpload} image description
+     *
+     * @param {string} groupId
      * @return {Promise<any>} Returns a promise
      */
-    addPersonImage(personId: any, image: any): Promise<any>;
+    getGroup(groupId: string): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} personId description
-     * @param {string} imageId description
-     * @return {Promise<any>} Returns a promise
-     */
-    getPersonImage(personId: any, imageId: any): Promise<any>;
-    /**
-     *  description
-     *
-     * @param {string} personId description
-     * @param {string} imageId description
-     * @return {Promise<any>} Returns a promise
-     */
-    deletePersonImage(personId: any, imageId: any): Promise<any>;
-    /**
-     *  description
      *
      * @return {Promise<any>} Returns a promise
      */
     getGroups(): Promise<any>;
     /**
-     *  description
      *
-     * @param {number} page description
-     * @param {number} size description
+     *
+     * @param {number} page
+     * @param {number} size
      * @return {Promise<any>} Returns a promise
      */
-    getGroupsForPage(page: any, size: any): Promise<any>;
+    getGroupsForPage(page: number, size: number): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} personId description
+     *
+     * @param {string} personId
      * @return {Promise<any>} Returns a promise
      */
-    getPersonGroups(personId: any): Promise<any>;
+    getPersonGroups(personId: string): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} personId description
-     * @param {number} page description
-     * @param {number} size description
+     *
+     * @param {string} personId
+     * @param {number} page
+     * @param {number} size
      * @return {Promise<any>} Returns a promise
      */
-    getPersonGroupsForPage(personId: any, page: any, size: any): Promise<any>;
+    getPersonGroupsForPage(personId: string, page: number, size: number): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} name description
-     * @param {object} metadata description
+     *
+     * @param {string} groupId
      * @return {Promise<any>} Returns a promise
      */
-    createGroup(name: any, metadata: any): Promise<any>;
+    getPersonsInGroup(groupId: string): Promise<any>;
     /**
-     *  description
      *
-     * @param {string} groupId description
+     *
+     * @param {string} groupId
+     * @param {number} page
+     * @param {number} size
      * @return {Promise<any>} Returns a promise
      */
-    getGroup(groupId: any): Promise<any>;
+    getPersonsInGroupForPage(groupId: string, page: number, size: number): Promise<any>;
     /**
-     *  description
      *
-     * @param {PersonGroup} group description
+     *
+     * @param {SearchPersonRequest} searchPersonRequest
      * @return {Promise<any>} Returns a promise
      */
-    updateGroup(group: any): Promise<any>;
-    /**
-     *  description
-     *
-     * @param {string} groupId description
-     * @param {EditGroupPersonsRequest} editGroupPersonsRequest description
-     * @return {Promise<any>} Returns a promise
-     */
-    editPersonsInGroup(groupId: any, editGroupPersonsRequest: any): Promise<any>;
-    /**
-     *  description
-     *
-     * @param {string} groupId description
-     * @return {Promise<any>} Returns a promise
-     */
-    getPersonsInGroup(groupId: any): Promise<any>;
-    /**
-     *  description
-     *
-     * @param {string} groupId description
-     * @param {number} page description
-     * @param {number} size description
-     * @return {Promise<any>} Returns a promise
-     */
-    getPersonsInGroupForPage(groupId: any, page: any, size: any): Promise<any>;
-    /**
-     *  description
-     *
-     * @param {string} groupId description
-     * @return {Promise<any>} Returns a promise
-     */
-    deleteGroup(groupId: any): Promise<any>;
-    /**
-     *  description
-     *
-     * @param {object} searchPersonRequest description
-     * @return {Promise<any>} Returns a promise
-     */
-    searchPerson(searchPersonRequest: any): Promise<any>;
+    searchPerson(searchPersonRequest: SearchPersonRequest): Promise<any>;
 }
