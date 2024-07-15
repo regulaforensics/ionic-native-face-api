@@ -69,7 +69,7 @@ export class HomePage {
           raw = raw.substring(lnEventId.length, raw.length)
           var notification = LivenessNotification.fromJson(JSON.parse(raw))
           console.log("LivenessStatus: " + notification.status)
-        } if (raw.substring(0, csEventId.length) === csEventId) {
+        } else if (raw.substring(0, csEventId.length) === csEventId) {
           raw = raw.substring(csEventId.length, raw.length)
           var cameraId = raw
           console.log("switched to camera " + cameraId)
@@ -112,7 +112,7 @@ export class HomePage {
     function pickImage(first: boolean) {
       app.dialogs.confirm("Choose the option", "", ["Use camera", "Use gallery"]).then((button: number) => {
         if (button == 1)
-          FaceSDK.startFaceCapture(null).subscribe((raw: any) => {
+          FaceSDK.startFaceCapture(null).subscribe((raw: string) => {
             // handling event
             var csEventId = "cameraSwitchEvent"
             if (raw.substring(0, csEventId.length) === csEventId) {
