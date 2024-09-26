@@ -68,6 +68,7 @@ export declare class FaceCaptureConfig {
     closeButtonEnabled?: boolean;
     torchButtonEnabled?: boolean;
     vibrateOnSteps?: boolean;
+    detectOcclusion?: boolean;
     cameraPositionAndroid?: number;
     cameraPositionIOS?: number;
     screenOrientation?: number[];
@@ -217,6 +218,7 @@ export declare class ComparedFacesSplit {
 }
 export declare class MatchFacesConfig {
     processingMode?: number;
+    locationTrackingEnabled?: boolean;
     static fromJson(jsonObject?: any): MatchFacesConfig | undefined;
 }
 export declare class MatchFacesDetection {
