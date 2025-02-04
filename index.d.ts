@@ -68,6 +68,7 @@ export declare class FaceCaptureConfig {
     closeButtonEnabled?: boolean;
     torchButtonEnabled?: boolean;
     vibrateOnSteps?: boolean;
+    detectOcclusion?: boolean;
     cameraPositionAndroid?: number;
     cameraPositionIOS?: number;
     screenOrientation?: number[];
@@ -217,6 +218,7 @@ export declare class ComparedFacesSplit {
 }
 export declare class MatchFacesConfig {
     processingMode?: number;
+    locationTrackingEnabled?: boolean;
     static fromJson(jsonObject?: any): MatchFacesConfig | undefined;
 }
 export declare class MatchFacesDetection {
@@ -627,6 +629,9 @@ export declare const FaceCaptureErrorCode: {
 export declare const LivenessBackendErrorCode: {
     UNDEFINED: number;
     NO_LICENSE: number;
+    NOT_INITIALIZED: number;
+    COMMAND_IS_NOT_SUPPORTED: number;
+    PARAMS_READ_ERROR: number;
     LOW_QUALITY: number;
     TRACK_BREAK: number;
     CLOSED_EYES_DETECTED: number;
@@ -953,6 +958,9 @@ export declare const Enum: {
     LivenessBackendErrorCode: {
         UNDEFINED: number;
         NO_LICENSE: number;
+        NOT_INITIALIZED: number;
+        COMMAND_IS_NOT_SUPPORTED: number;
+        PARAMS_READ_ERROR: number;
         LOW_QUALITY: number;
         TRACK_BREAK: number;
         CLOSED_EYES_DETECTED: number;
