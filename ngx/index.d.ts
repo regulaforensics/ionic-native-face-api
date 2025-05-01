@@ -69,6 +69,7 @@ export declare class FaceCaptureConfig {
     torchButtonEnabled?: boolean;
     vibrateOnSteps?: boolean;
     detectOcclusion?: boolean;
+    showFaceAnimation?: boolean;
     cameraPositionAndroid?: number;
     cameraPositionIOS?: number;
     screenOrientation?: number[];
@@ -150,6 +151,7 @@ export declare class FaceSDKVersion {
 export declare class InitConfig {
     license?: string;
     licenseUpdate?: boolean;
+    useBleDevice?: boolean;
     static fromJson(jsonObject?: any): InitConfig | undefined;
 }
 export declare class InitException {
@@ -629,6 +631,9 @@ export declare const FaceCaptureErrorCode: {
 export declare const LivenessBackendErrorCode: {
     UNDEFINED: number;
     NO_LICENSE: number;
+    NOT_INITIALIZED: number;
+    COMMAND_IS_NOT_SUPPORTED: number;
+    PARAMS_READ_ERROR: number;
     LOW_QUALITY: number;
     TRACK_BREAK: number;
     CLOSED_EYES_DETECTED: number;
@@ -648,6 +653,14 @@ export declare const LivenessBackendErrorCode: {
     WRONG_GEO: number;
     WRONG_OF: number;
     WRONG_VIEW: number;
+    TIMEOUT_LIVENESS_TRANSACTION: number;
+    FAILED_LIVENESS_TRANSACTION: number;
+    ABORTED_LIVENESS_TRANSACTION: number;
+    GENERAL_CHECK_FAIL: number;
+    PASSIVE_LIVENESS_FAIL: number;
+    PRINTED_FACE_DETECTED: number;
+    BLOCKED_REQUEST: number;
+    CORRUPTED_REQUEST: number;
 };
 export declare const ProcessingMode: {
     ONLINE: number;
@@ -955,6 +968,9 @@ export declare const Enum: {
     LivenessBackendErrorCode: {
         UNDEFINED: number;
         NO_LICENSE: number;
+        NOT_INITIALIZED: number;
+        COMMAND_IS_NOT_SUPPORTED: number;
+        PARAMS_READ_ERROR: number;
         LOW_QUALITY: number;
         TRACK_BREAK: number;
         CLOSED_EYES_DETECTED: number;
@@ -974,6 +990,14 @@ export declare const Enum: {
         WRONG_GEO: number;
         WRONG_OF: number;
         WRONG_VIEW: number;
+        TIMEOUT_LIVENESS_TRANSACTION: number;
+        FAILED_LIVENESS_TRANSACTION: number;
+        ABORTED_LIVENESS_TRANSACTION: number;
+        GENERAL_CHECK_FAIL: number;
+        PASSIVE_LIVENESS_FAIL: number;
+        PRINTED_FACE_DETECTED: number;
+        BLOCKED_REQUEST: number;
+        CORRUPTED_REQUEST: number;
     };
     ProcessingMode: {
         ONLINE: number;
