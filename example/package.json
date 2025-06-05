@@ -13,9 +13,9 @@
   },
   "private": true,
   "dependencies": {
-    "@regulaforensics/cordova-plugin-face-api": "6.4.547",
-    "@regulaforensics/ionic-native-face-api": "6.4.354",
-    "@regulaforensics/cordova-plugin-face-core-basic": "6.4.201",
+    "@regulaforensics/cordova-plugin-face-api": "7.1.609",
+    "@regulaforensics/ionic-native-face-api": "7.1.407",
+    "@regulaforensics/cordova-plugin-face-core-basic": "7.1.296",
     "cordova-plugin-camera": "7.0.0",
     "@awesome-cordova-plugins/camera": "6.6.0",
     "@awesome-cordova-plugins/core": "6.6.0",
