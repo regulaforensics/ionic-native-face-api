@@ -1,6 +1,6 @@
 {
   "name": "@regulaforensics/ionic-native-face-api",
-  "version": "7.1.445-rc",
+  "version": "7.1.447-rc",
   "description": "Ionic Native wrapper for cordova face api",
   "main": "index.js",
   "keywords": [
